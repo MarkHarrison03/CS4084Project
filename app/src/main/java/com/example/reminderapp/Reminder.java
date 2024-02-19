@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.reminderapp;
 import java.util.Date;
 public class Reminder {
     private String description;
