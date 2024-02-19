@@ -5,10 +5,10 @@ import java.time.*;
 public class Reminder {
     private String description;
     private String title;
-    private Date dateInput;
+    private LocalDateTime dateInput;
     private boolean canSend;
 
-    public Reminder(String description, String title, Date dateInput, boolean canSend){
+    public Reminder(String description, String title, LocalDateTime dateInput, boolean canSend){
         this.description = description;
         this.dateInput = dateInput;
         this.canSend = canSend;
@@ -50,5 +50,4 @@ public class Reminder {
     public void activateReminder(Reminder reminder) {
         reminder.setCanSend(reminder.dateInput == LocalDateTime.now());
     }
-
 }
