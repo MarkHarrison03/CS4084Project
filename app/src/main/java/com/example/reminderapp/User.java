@@ -1,4 +1,5 @@
 package com.example.reminderapp;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -9,7 +10,7 @@ public class User {
     private ArrayList<Reminder> currentReminders;
     private ArrayList<Location> userLocations;
 
-    public User(String firstName, String lastName, String userName, ArrayList<Reminder> currentReminders, ArrayList<Location> userLocations){
+    public User(String firstName, String lastName, String userName, ArrayList<Reminder> currentReminders, ArrayList<Location> userLocations) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -57,18 +58,20 @@ public class User {
         this.userLocations = userLocations;
     }
 
-    public void addUserReminder(Reminder r){
+    public void addUserReminder(Reminder r) {
         currentReminders.add(r);
     }
-    public void removeReminder(Reminder r){
+
+    public void removeReminder(Reminder r) {
         currentReminders.remove(r);
         currentReminders.removeIf(Objects::isNull);
     }
 
-    public void addUserLocation(Location l){
+    public void addUserLocation(Location l) {
         userLocations.add(l);
     }
-    public void removeUserLocation(Location l){
+
+    public void removeUserLocation(Location l) {
         userLocations.remove(l);
         userLocations.removeIf(Objects::isNull);
     }
