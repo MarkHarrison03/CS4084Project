@@ -18,49 +18,51 @@ import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Log.d("MainActivity", "Hello World");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-            createNotificationChannel();
-
+        createNotificationChannel();
         Button notifyButton = findViewById(R.id.NewReminder);
         notifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("MainActivity", "Hello World");
-
-                createNotification(); // Trigger the notification
+                LocalDateTime dateTimeNow = LocalDateTime.now();
+                Reminder reminder = new Reminder("Test", "Test title", dateTimeNow, true);
+                createNotification(reminder); // Trigger the notification
             }
         });
     }
 
     private void createNotificationChannel() {
-        // Check if the Android Version is Oreo (API 26) or higher, because Notification Channels are not supported in older versions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "My Notification Channel";
-            String description = "Channel Description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("my_channel_id", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        CharSequence name = "My Notification Channel";
+        String description = "Channel Description";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("my_channel_id", name, importance);
+        channel.setDescription(description);
+        // Register the channel with the system
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
-    private void createNotification() {
+    //creates reminder based on reminder object details
+    private void createNotification(Reminder reminder) {
         System.out.println("hi!");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
-              // replace ic_notification with your own icon
+                // replace ic_notification with your own icon
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Notification Title")
-                .setContentText("This is the notification message.")
+                .setContentTitle(reminder.getTitle() + reminder.getDateInput())
+                .setContentText(reminder.getDescription())
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         System.out.println("hi!2");
 
