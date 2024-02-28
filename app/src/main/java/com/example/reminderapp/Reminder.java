@@ -1,6 +1,8 @@
 package com.example.reminderapp;
 
+import java.lang.reflect.Array;
 import java.time.*;
+import java.util.ArrayList;
 
 public class Reminder {
     private String description;
@@ -49,5 +51,12 @@ public class Reminder {
 
     public void activateReminder(Reminder reminder) {
         reminder.setCanSend(reminder.dateInput == LocalDateTime.now());
+    }
+
+    public void ReminderParser(ArrayList<Reminder> reminders, User user){
+        reminders = user.getCurrentReminders();
+        for (Reminder r:reminders){
+            activateReminder(r);
+        }
     }
 }
