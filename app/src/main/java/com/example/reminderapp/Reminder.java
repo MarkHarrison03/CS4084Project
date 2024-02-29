@@ -54,7 +54,7 @@ public class Reminder {
     }
 
     public void ReminderParser(ArrayList<Reminder> reminders, User user){
-        reminders = user.getCurrentReminders();
+        reminders = user.getUserReminders();
         for (Reminder r:reminders){
             activateReminder(r);
         }

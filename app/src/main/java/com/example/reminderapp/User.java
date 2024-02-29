@@ -89,7 +89,7 @@ public class User {
     public void addUserLocationReminder(LocationReminder locationReminder){
         userLocationReminders.add(locationReminder);
     }
-    public void removeReminder(LocationReminder locationReminder) {
+    public void removeLocationReminder(LocationReminder locationReminder) {
         userLocationReminders.remove(locationReminder);
         userLocationReminders.removeIf(Objects::isNull);
     }
