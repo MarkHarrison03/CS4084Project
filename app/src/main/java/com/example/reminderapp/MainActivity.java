@@ -34,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("MainActivity", "Hello World");
+                setContentView(R.layout.activity_new_reminder);
 
-                createNotification(); // Trigger the notification
+
+              //  createNotification(); // Trigger the notification
             }
         });
     }
