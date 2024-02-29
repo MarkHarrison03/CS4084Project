@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/NewReminder" />
 
     <Button
-        android:id="@+id/MyGroups"
+        android:id="@+id/MyLocations"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="366dp"
         android:layout_height="109dp"
@@ -54,12 +54,23 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="54dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/profile_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/profile_icon"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
