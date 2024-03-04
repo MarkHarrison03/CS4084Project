@@ -1,0 +1,69 @@
+package com.example.reminderapp;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+public class ProfileActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
+
+        Button changeUsernameButton = findViewById(R.id.changeUsernameButton);
+        Button changePasswordButton = findViewById(R.id.changePasswordButton);
+        Button changeEmailButton = findViewById(R.id.changeEmailButton);
+
+        private void changeUsername() {
+/*
+ChatGpt for firebase stuff, i have no idea
+private void changeUsername(String newUsername) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+            userRef.child("username").setValue(newUsername)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Username updated successfully
+                        Toast.makeText(ProfileActivity.this, "Username updated", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to update username
+                        Toast.makeText(ProfileActivity.this, "Failed to update username", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+ */
+        }
+
+
+
+        changeUsernameButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                changeUsername();
+            }
+        });
+
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                changePassword();
+            }
+        });
+
+        changeEmailButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                changeEmail();
+            }
+        });
+
+    }
+}
