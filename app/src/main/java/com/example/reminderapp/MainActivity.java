@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         createNotificationChannel();
         Button notifyButton = findViewById(R.id.NewReminder);
+        Button profileButton = findViewById(R.id.profile_button);
         notifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,7 +44,16 @@ public class MainActivity extends AppCompatActivity {
                 createNotification(reminder); // Trigger the notification
             }
         });
+
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(profileIntent);
+            }
+        });
     }
+
 
     private void createNotificationChannel() {
         CharSequence name = "My Notification Channel";

@@ -14,8 +14,30 @@ public class ProfileActivity extends AppCompatActivity {
         Button changeUsernameButton = findViewById(R.id.changeUsernameButton);
         Button changePasswordButton = findViewById(R.id.changePasswordButton);
         Button changeEmailButton = findViewById(R.id.changeEmailButton);
+        changeUsernameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the method to change the username
+                changeUsername();
+            }
+        });
 
-        private void changeUsername() {
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the method to change the password
+                changePassword();
+            }
+        });
+
+        changeEmailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the method to change the email
+                changeEmail();
+            }
+        });
+
 /*
 ChatGpt for firebase stuff, i have no idea
 private void changeUsername(String newUsername) {
@@ -40,30 +62,16 @@ private void changeUsername(String newUsername) {
                 });
 
  */
-        }
+    }
 
 
+    private void changeUsername() {
 
-        changeUsernameButton.setOnClickListener(new View.OnClickListener() {
+    }
+    private void changePassword() {
 
-            public void onClick(View v) {
-                changeUsername();
-            }
-        });
-
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                changePassword();
-            }
-        });
-
-        changeEmailButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                changeEmail();
-            }
-        });
+    }
+    private void changeEmail() {
 
     }
 }
