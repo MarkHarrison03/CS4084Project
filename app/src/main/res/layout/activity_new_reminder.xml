@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.10" />
 
     <EditText
         android:id="@+id/LabelText"
@@ -28,23 +28,11 @@
         android:text="Label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintVertical_bias="0.25"
         tools:ignore="OnClick" />
-
-    <EditText
-        android:id="@+id/LocationText"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Location"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
 
     <Button
         android:id="@+id/TimeButton"
@@ -52,10 +40,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="150dp"
         android:text="Select Time"
-        app:layout_constraintBottom_toTopOf="@+id/LocationText"
+        app:layout_constraintBottom_toTopOf="@+id/Locations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LabelText" />
+        app:layout_constraintTop_toBottomOf="@+id/DescriptionText" />
 
     <Button
         android:id="@+id/DateButton"
@@ -63,10 +51,48 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
         android:text="Select Date"
-        app:layout_constraintBottom_toTopOf="@+id/LocationText"
+        app:layout_constraintBottom_toTopOf="@+id/Locations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LabelText" />
+        app:layout_constraintTop_toBottomOf="@+id/DescriptionText" />
+
+    <Button
+        android:id="@+id/SubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DescriptionText"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <EditText
+        android:id="@+id/DescriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <Spinner
+        android:id="@+id/LocationSpinner"
+        android:layout_width="216dp"
+        android:layout_height="48dp"
+        android:background="@color/purple"
+        android:popupBackground="@color/purple"
+        android:textColor="@color/black"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/SubmitButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DescriptionText"
+        app:layout_constraintVertical_bias="0.65" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
