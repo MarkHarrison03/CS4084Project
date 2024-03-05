@@ -8,7 +8,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="75dp"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
@@ -21,9 +21,7 @@
         android:layout_height="75dp"
         android:text="Change password"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintBottom_toTopOf="@+id/changeEmailButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/toolbar"
         android:layout_marginTop="16dp"/>
 
     <Button
@@ -58,5 +56,16 @@
     app:layout_constraintStart_toEndOf="@id/changePasswordButton"
     app:layout_constraintEnd_toStartOf="@id/changeEmailButton"
     android:layout_marginTop="16dp"
-    android:visibility="gone" />
+    android:visibility="invisible" />
+    <Button
+        android:id="@+id/submitResetEmail"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Submit"
+        app:layout_constraintTop_toBottomOf="@id/emailEditText"
+        app:layout_constraintStart_toEndOf="@id/emailEditText"
+        app:layout_constraintEnd_toStartOf="@id/emailEditText"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
