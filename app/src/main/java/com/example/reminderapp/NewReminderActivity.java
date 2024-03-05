@@ -41,15 +41,9 @@ public class NewReminderActivity extends AppCompatActivity {
 
         List<String> locations_array = Arrays.asList("home", "school", "work");
         Spinner locations = (Spinner) findViewById(R.id.LocationSpinner);
-            // Create an ArrayAdapter using the string array and a default spinner layout.
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                locations_array,
-                android.R.layout.simple_spinner_item
-        );
-            // Specify the layout to use when the list of choices appears.
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations_array);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner.
         locations.setAdapter(adapter);
 
         Button timeButton = findViewById(R.id.TimeButton);
@@ -126,11 +120,16 @@ public class NewReminderActivity extends AppCompatActivity {
 
         EditText Label = (EditText)findViewById(R.id.LabelText);
         label = Label.getText().toString();
-        // EditText Location = (EditText)findViewById(R.id.LocationText);
-          //  location = Location.getText().toString();
 
         EditText Description = (EditText)findViewById(R.id.DescriptionText);
         description = Description.getText().toString();
+
+        Spinner location_spinner = (Spinner) findViewById(R.id.LocationSpinner);
+        String location = location_spinner.getSelectedItem().toString();
+
+        String date = dayOfMonth + "/" + month + "/" + year;
+
+        String time = hour + ":" + minute;
 
 
 
