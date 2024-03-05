@@ -16,21 +16,11 @@
         />
 
     <Button
-        android:id="@+id/changeUsernameButton"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:text="Change username"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
-
-    <Button
         android:id="@+id/changePasswordButton"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:text="Change password"
-        app:layout_constraintTop_toBottomOf="@+id/changeUsernameButton"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintBottom_toTopOf="@+id/changeEmailButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,5 +48,15 @@
         app:layout_constraintBottom_toBottomOf="@id/toolbar"
         android:contentDescription="Back Button" />
 
-
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:hint="Enter your email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintTop_toBottomOf="@id/changePasswordButton"
+    app:layout_constraintStart_toEndOf="@id/changePasswordButton"
+    app:layout_constraintEnd_toStartOf="@id/changeEmailButton"
+    android:layout_marginTop="16dp"
+    android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
