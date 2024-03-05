@@ -1,9 +1,12 @@
 package com.example.reminderapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class ProfileActivity extends AppCompatActivity {
     @Override
@@ -14,6 +17,7 @@ public class ProfileActivity extends AppCompatActivity {
         Button changeUsernameButton = findViewById(R.id.changeUsernameButton);
         Button changePasswordButton = findViewById(R.id.changePasswordButton);
         Button changeEmailButton = findViewById(R.id.changeEmailButton);
+        ImageButton backButton = findViewById(R.id.backButton);
         changeUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,11 +37,20 @@ public class ProfileActivity extends AppCompatActivity {
         changeEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Call the method to change the email
+
                 changeEmail();
             }
         });
 
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backButton();
+            }
+        });
+
+
+    }
 /*
 ChatGpt for firebase stuff, i have no idea
 private void changeUsername(String newUsername) {
@@ -62,16 +75,22 @@ private void changeUsername(String newUsername) {
                 });
 
  */
-    }
 
 
     private void changeUsername() {
 
     }
+
     private void changePassword() {
 
     }
+
     private void changeEmail() {
 
+    }
+
+    private void backButton() {
+        Intent mainIntent = new Intent(ProfileActivity.this , MainActivity.class);
+        startActivity(mainIntent);
     }
 }
