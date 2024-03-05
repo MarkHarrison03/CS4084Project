@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("MainActivity", "Hello World");
-                LocalDateTime dateTimeNow = LocalDateTime.now();
-                Reminder reminder = new Reminder("Test", "Test title", dateTimeNow, true);
-                createNotification(reminder); // Trigger the notification
+                Intent newRemind = new Intent(MainActivity.this, NewReminderActivity.class);
+                startActivity(newRemind);
+
             }
         });
     }
