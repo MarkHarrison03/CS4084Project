@@ -31,7 +31,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_bias="0.3"
         tools:ignore="OnClick" />
 
     <Button
@@ -40,10 +40,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="150dp"
         android:text="Select Time"
-        app:layout_constraintBottom_toTopOf="@+id/Locations"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DescriptionText" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/DateButton"
@@ -51,10 +51,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
         android:text="Select Date"
-        app:layout_constraintBottom_toTopOf="@+id/Locations"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DescriptionText" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/SubmitButton"
@@ -86,13 +86,24 @@
         android:layout_height="48dp"
         android:background="@color/purple"
         android:popupBackground="@color/purple"
-        android:textColor="@color/black"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/SubmitButton"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DescriptionText"
-        app:layout_constraintVertical_bias="0.65" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <CheckBox
+        android:id="@+id/LocationCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Is location reminder"
+        app:layout_constraintBottom_toTopOf="@+id/LabelText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NewReminderText"
+        app:layout_constraintVertical_bias="0.5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

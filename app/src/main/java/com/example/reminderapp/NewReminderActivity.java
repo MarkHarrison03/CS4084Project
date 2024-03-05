@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -28,6 +30,7 @@ public class NewReminderActivity extends AppCompatActivity {
     int year;
     int month;
     int dayOfMonth;
+    boolean isLocation = false;
 
     String location;
 
@@ -39,19 +42,16 @@ public class NewReminderActivity extends AppCompatActivity {
 
         Log.d("NewReminder", "This mf making a reminder");
 
+
         List<String> locations_array = Arrays.asList("home", "school", "work");
         Spinner locations = (Spinner) findViewById(R.id.LocationSpinner);
-            // Create an ArrayAdapter using the string array and a default spinner layout.
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                locations_array,
-                android.R.layout.simple_spinner_item
-        );
-            // Specify the layout to use when the list of choices appears.
+        locations.setVisibility(View.GONE);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations_array);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner.
         locations.setAdapter(adapter);
 
+        CheckBox locationCheck = findViewById(R.id.LocationCheck);
         Button timeButton = findViewById(R.id.TimeButton);
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +71,22 @@ public class NewReminderActivity extends AppCompatActivity {
                 showDatePickerDialog();
             }
         });
+
+
+        locationCheck.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if(((CheckBox)view).isChecked()){
+                    locations.setVisibility(View.VISIBLE);
+                    isLocation = true;
+                }
+                else{
+                    locations.setVisibility(View.GONE);
+                    isLocation = false;
+                }
+            }
+        });
+
 
         Button submitbutton = findViewById(R.id.SubmitButton);
         submitbutton.setOnClickListener(new View.OnClickListener() {
@@ -124,13 +140,27 @@ public class NewReminderActivity extends AppCompatActivity {
 
     private void submittedReminder(){
 
+
         EditText Label = (EditText)findViewById(R.id.LabelText);
         label = Label.getText().toString();
-        // EditText Location = (EditText)findViewById(R.id.LocationText);
-          //  location = Location.getText().toString();
 
         EditText Description = (EditText)findViewById(R.id.DescriptionText);
         description = Description.getText().toString();
+
+        Spinner location_spinner = (Spinner) findViewById(R.id.LocationSpinner);
+        String location = location_spinner.getSelectedItem().toString();
+
+
+        LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
+
+        if (isLocation = false){
+
+        }
+
+
+    }
+
+
 
 
 
@@ -142,4 +172,3 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
 
-}
