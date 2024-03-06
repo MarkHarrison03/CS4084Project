@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDateTime;
@@ -30,11 +31,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "Hello World");
 
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
         createNotificationChannel();
-        Button notifyButton = findViewById(R.id.NewReminder);
-        notifyButton.setOnClickListener(new View.OnClickListener() {
+        Button newRemindButton = findViewById(R.id.NewReminder);
+        Button myRemindersButton = findViewById(R.id.MyReminders);
+
+
+        newRemindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("MainActivity", "Hello World");
@@ -43,6 +48,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        myRemindersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Notification Test", "clicked");
+
+            }
+        });
+
+
     }
 
     private void createNotificationChannel() {
@@ -73,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(1, builder.build());
         System.out.println("hi!4");
     }
+
+
 
 
 }
