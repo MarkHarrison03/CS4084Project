@@ -1,9 +1,21 @@
 package com.example.reminderapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,18 +44,28 @@ public class NewReminderActivity extends AppCompatActivity {
     int dayOfMonth;
     boolean isLocation = false;
 
-    String location;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+
+
+
+
+
+
+
+    String location;
+    String greeting = "" + user + "is currently making a reminder";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_reminder);
 
-        Log.d("NewReminder", "This mf making a reminder");
+        Log.d("NewReminder", "this mf making a reminder");
 
 
         List<String> locations_array = Arrays.asList("home", "school", "work");
+        FirebaseApp.initializeApp(this);
         Spinner locations = (Spinner) findViewById(R.id.LocationSpinner);
         locations.setVisibility(View.GONE);
 
@@ -153,20 +175,36 @@ public class NewReminderActivity extends AppCompatActivity {
 
         LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
-        if (isLocation = false){
+        Reminder newReminder = new Reminder(description, label, newReminderTime, false);
 
-        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference remindersRef = database.getReference("reminders");
+
+        // Push the new reminder object to the database
+        DatabaseReference newReminderRef = remindersRef.push();
+        newReminderRef.setValue(user, newReminder)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Data successfully written to the database
+                        // You can perform any additional actions here
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure to write data to the database
+                    }
+                });
+
+
+
+
+
 
 
     }
-
-
-
-
-
-
-
-
 
     }
 

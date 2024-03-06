@@ -46,6 +46,8 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+    //code to add the firebase db
+    implementation ("com.google.firebase:firebase-database:20.0.0")
 
 
     testImplementation("junit:junit:4.13.2")
@@ -55,6 +57,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
 
 
+
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
@@ -62,4 +65,6 @@ dependencies {
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+
+
 }

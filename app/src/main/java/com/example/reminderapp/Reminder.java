@@ -1,62 +1,62 @@
-package com.example.reminderapp;
+    package com.example.reminderapp;
 
-import java.lang.reflect.Array;
-import java.time.*;
-import java.util.ArrayList;
+    import java.lang.reflect.Array;
+    import java.time.*;
+    import java.util.ArrayList;
 
-public class Reminder {
-    private String description;
-    private String title;
-    private LocalDateTime dateInput;
-    private boolean canSend;
+    public class Reminder {
+        private String description;
+        private String title;
+        private LocalDateTime dateInput;
+        private boolean canSend;
 
-    public Reminder(String description, String title, LocalDateTime dateInput, boolean canSend){
-        this.description = description;
-        this.dateInput = dateInput;
-        this.canSend = canSend;
-        this.title = title;
-    }
+        public Reminder(String description, String title, LocalDateTime dateInput, boolean canSend){
+            this.description = description;
+            this.dateInput = dateInput;
+            this.canSend = canSend;
+            this.title = title;
+        }
 
-    public LocalDateTime getDateInput() {
-        return dateInput;
-    }
+        public LocalDateTime getDateInput() {
+            return dateInput;
+        }
 
-    public String getDescription() {
-        return description;
-    }
+        public String getDescription() {
+            return description;
+        }
 
-    public String getTitle() {
-        return title;
-    }
+        public String getTitle() {
+            return title;
+        }
 
-    public boolean isCanSend() {
-        return canSend;
-    }
+        public boolean isCanSend() {
+            return canSend;
+        }
 
-    public void setCanSend(boolean canSend) {
-        this.canSend = canSend;
-    }
+        public void setCanSend(boolean canSend) {
+            this.canSend = canSend;
+        }
 
-    public void setDateInput(int year, int month, int day, int hour, int minute) {
-        this.dateInput = LocalDateTime.of(year, month, day, hour, minute);
-    }
+        public void setDateInput(int year, int month, int day, int hour, int minute) {
+            this.dateInput = LocalDateTime.of(year, month, day, hour, minute);
+        }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+        public void setTitle(String title) {
+            this.title = title;
+        }
 
-    public void activateReminder(Reminder reminder) {
-        reminder.setCanSend(reminder.dateInput == LocalDateTime.now());
-    }
+        public void activateReminder(Reminder reminder) {
+            reminder.setCanSend(reminder.dateInput == LocalDateTime.now());
+        }
 
-    public void ReminderParser(ArrayList<Reminder> reminders, User user){
-        reminders = user.getUserReminders();
-        for (Reminder r:reminders){
-            activateReminder(r);
+        public void ReminderParser(ArrayList<Reminder> reminders, User user){
+            reminders = user.getUserReminders();
+            for (Reminder r:reminders){
+                activateReminder(r);
+            }
         }
     }
-}
