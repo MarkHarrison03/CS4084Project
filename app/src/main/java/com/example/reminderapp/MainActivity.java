@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         createNotificationChannel();
         Button notifyButton = findViewById(R.id.NewReminder);
+        Button profileButton = findViewById(R.id.profile_button);
         notifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,7 +44,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(profileIntent);
+            }
+        });
     }
+
 
     private void createNotificationChannel() {
         CharSequence name = "My Notification Channel";
