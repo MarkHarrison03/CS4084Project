@@ -33,13 +33,13 @@
         app:layout_constraintTop_toBottomOf="@+id/NewReminder" />
 
     <Button
-        android:id="@+id/MyLocations"
+        android:id="@+id/map"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="366dp"
         android:layout_height="109dp"
         android:layout_marginTop="28dp"
         android:backgroundTint="@color/grey"
-        android:text="My Groups"
+        android:text="Map Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
