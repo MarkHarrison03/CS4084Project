@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         Button newRemindButton = findViewById(R.id.NewReminder);
         Button myRemindersButton = findViewById(R.id.MyReminders);
-
+        Button mapButton = findViewById(R.id.map);
 
         newRemindButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +56,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        mapButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View mapview){
+                Intent newMap = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(newMap);
+            }
+        });
     }
+
+
 
 
     private void createNotificationChannel() {
