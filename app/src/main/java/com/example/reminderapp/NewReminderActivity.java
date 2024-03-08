@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -45,16 +46,11 @@ public class NewReminderActivity extends AppCompatActivity {
     boolean isLocation = false;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
-
-
-
-
+    String userID = user.toString();
 
 
     String location;
-    String greeting = "" + user + "is currently making a reminder";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +58,10 @@ public class NewReminderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_reminder);
 
         Log.d("NewReminder", "this mf making a reminder");
+
+
+
+
 
 
         List<String> locations_array = Arrays.asList("home", "school", "work");
@@ -175,7 +175,11 @@ public class NewReminderActivity extends AppCompatActivity {
 
         LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
-        Reminder newReminder = new Reminder(description, label, newReminderTime, false);
+
+
+
+
+        Reminder newReminder = new Reminder(description, label, newReminderTime, userID);
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -183,12 +187,12 @@ public class NewReminderActivity extends AppCompatActivity {
 
         // Push the new reminder object to the database
         DatabaseReference newReminderRef = remindersRef.push();
-        newReminderRef.setValue(user, newReminder)
+        newReminderRef.setValue(newReminder)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                    //    Log.d("NewReminder", "Firebase push success");
-                    //    Intent newRemind = new Intent(NewReminderActivity.this, MainActivity.class);
+                        Log.d("NewReminder", "Firebase push success");
+                        Intent newRemind = new Intent(NewReminderActivity.this, MainActivity.class);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
