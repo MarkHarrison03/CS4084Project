@@ -53,17 +53,32 @@
             this.title = title;
         }
 
-        /*
-        public void activateReminder(Reminder reminder) {
-            reminder.setCanSend(reminder.dateInput == LocalDateTime.now());
+
+        public boolean activateReminder(Reminder reminder) {
+            return reminder.dateInput == LocalDateTime.now();
         }
 
-        public void ReminderParser(ArrayList<Reminder> reminders, User user){
-            reminders = user.getUserReminders();
+        public void reminderParser(ArrayList<Reminder> reminders){
             for (Reminder r:reminders){
                 activateReminder(r);
             }
         }
-        */
+
+        //Method to get today's reminders and add them to a separate list to save on cpu and memory usage
+        public void todayReminders(ArrayList<Reminder> reminders, User user){
+            LocalDate currentDate = LocalDate.now();
+            reminders = user.getUserReminders();
+            for(Reminder r: reminders){
+                if(r.getDateInput().toLocalDate().equals(currentDate)){
+                    user.addTodayReminder(r);
+                }
+            }
+            //Checking if there are any reminders not for today's date in here and removing them
+            for (Reminder rem: user.getTodayReminders()){
+                if (!(rem.getDateInput().toLocalDate().equals(currentDate))){
+                    user.removeTodayReminder(rem);
+                }
+            }
+        }
 
     }
