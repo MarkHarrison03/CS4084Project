@@ -46,7 +46,7 @@ public class NewReminderActivity extends AppCompatActivity {
     boolean isLocation = false;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String userID = user.toString();
+    String email = Singleton.getInstance().getUserEmail();
 
 
     String location;
@@ -179,12 +179,14 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
 
-        Reminder newReminder = new Reminder(description, label, newReminderTime, userID);
+        Reminder newReminder = new Reminder(description, label, newReminderTime, email);
+        System.out.println(newReminder.getEmail());
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference remindersRef = database.getReference("reminders");
-
+        Log.d("AUTH",Singleton.getInstance().getUserEmail());
+        System.out.println(Singleton.getInstance().getUserEmail());
         // Push the new reminder object to the database
         DatabaseReference newReminderRef = remindersRef.push();
         newReminderRef.setValue(newReminder)
