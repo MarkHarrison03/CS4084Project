@@ -10,6 +10,7 @@
         private ArrayList<Reminder> userReminders;
         private ArrayList<Location> userLocations;
         private ArrayList<LocationReminder> userLocationReminders;
+        private ArrayList<Reminder> todayReminders;
 
 
 
@@ -95,5 +96,16 @@
             userLocationReminders.remove(locationReminder);
             userLocationReminders.removeIf(Objects::isNull);
         }
+        public ArrayList<Reminder> getTodayReminders(){
+            return todayReminders;
+        }
 
+        public void addTodayReminder(Reminder reminder){
+            todayReminders.add(reminder);
+        }
+
+        public void removeTodayReminder(Reminder reminder) {
+            todayReminders.remove(reminder);
+            todayReminders.removeIf(Objects::isNull);
+        }
     }
