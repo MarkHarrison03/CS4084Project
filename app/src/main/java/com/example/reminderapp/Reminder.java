@@ -11,14 +11,14 @@
         private String description;
         private String title;
         private LocalDateTime dateInput;
-        private String userID;
+        private String email = Singleton.getInstance().getUserEmail();
 
 
-        public Reminder(String description, String title, LocalDateTime dateInput, String userID){
+        public Reminder(String description, String title, LocalDateTime dateInput, String email){
             this.description = description;
             this.dateInput = dateInput;
             this.title = title;
-            this.userID = userID;
+            this.email = email;
         }
 
         public LocalDateTime getDateInput() {
@@ -33,10 +33,8 @@
             return title;
         }
 
-        public String getUserID(){
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                assert user != null;
-                return user.toString();
+        public String getEmail(){
+            return email;
         }
 
 
