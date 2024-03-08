@@ -12,6 +12,7 @@
         android:layout_width="375dp"
         android:layout_height="111dp"
         android:layout_marginTop="124dp"
+        android:background="@color/material_dynamic_tertiary80"
         android:backgroundTint="@color/grey"
         android:text="New Reminder"
         app:layout_constraintEnd_toEndOf="parent"

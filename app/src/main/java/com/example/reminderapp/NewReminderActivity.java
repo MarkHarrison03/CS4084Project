@@ -195,6 +195,7 @@ public class NewReminderActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Log.d("NewReminder", "Firebase push success");
                         Intent newRemind = new Intent(NewReminderActivity.this, MainActivity.class);
+                        startActivity(newRemind);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

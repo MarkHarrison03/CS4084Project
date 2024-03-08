@@ -22,8 +22,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class Login extends AppCompatActivity {
 
     TextInputEditText editTextEmail, editTextPassword;
-    Button buttonLogin,buttonReg;
+    Button buttonLogin, buttonReg;
     FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +52,12 @@ public class Login extends AppCompatActivity {
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
 
-                if(TextUtils.isEmpty(email)){
+                if (TextUtils.isEmpty(email)) {
                     Toast.makeText(Login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(Login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -66,8 +67,8 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                Singleton currentUser = Singleton.getInstance();
-                                currentUser.setCurrentUserEmail(email);
+                                    Singleton currentUser = Singleton.getInstance();
+                                    currentUser.setCurrentUserEmail(email);
                                     Toast.makeText(Login.this, "Authentication success.",
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -82,8 +83,6 @@ public class Login extends AppCompatActivity {
                                 }
                             }
                         });
-
-
 
 
             }
