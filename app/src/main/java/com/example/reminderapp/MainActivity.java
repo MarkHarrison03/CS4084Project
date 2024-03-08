@@ -62,21 +62,19 @@ public class MainActivity extends AppCompatActivity {
         myRemindersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Notification Test", "clicked");
-
+                Intent myReminders = new Intent(MainActivity.this, UserReminders.class);
+                startActivity(myReminders);
             }
         });
 
-        mapButton.setOnClickListener(new View.OnClickListener(){
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View mapview){
+            public void onClick(View mapview) {
                 Intent newMap = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(newMap);
             }
         });
     }
-
-
 
 
     private void createNotificationChannel() {
@@ -107,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(1, builder.build());
         System.out.println("hi!4");
     }
-
-
 
 
 }
