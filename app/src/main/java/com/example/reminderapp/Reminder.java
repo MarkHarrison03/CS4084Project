@@ -1,5 +1,8 @@
     package com.example.reminderapp;
 
+    import com.google.firebase.auth.FirebaseAuth;
+    import com.google.firebase.auth.FirebaseUser;
+
     import java.lang.reflect.Array;
     import java.time.*;
     import java.util.ArrayList;
@@ -8,13 +11,14 @@
         private String description;
         private String title;
         private LocalDateTime dateInput;
-        private boolean canSend;
+        private String userID;
 
-        public Reminder(String description, String title, LocalDateTime dateInput, boolean canSend){
+
+        public Reminder(String description, String title, LocalDateTime dateInput, String userID){
             this.description = description;
             this.dateInput = dateInput;
-            this.canSend = canSend;
             this.title = title;
+            this.userID = userID;
         }
 
         public LocalDateTime getDateInput() {
@@ -29,13 +33,13 @@
             return title;
         }
 
-        public boolean isCanSend() {
-            return canSend;
+        public String getUserID(){
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                assert user != null;
+                return user.toString();
         }
 
-        public void setCanSend(boolean canSend) {
-            this.canSend = canSend;
-        }
+
 
         public void setDateInput(int year, int month, int day, int hour, int minute) {
             this.dateInput = LocalDateTime.of(year, month, day, hour, minute);
@@ -49,6 +53,7 @@
             this.title = title;
         }
 
+        /*
         public void activateReminder(Reminder reminder) {
             reminder.setCanSend(reminder.dateInput == LocalDateTime.now());
         }
@@ -59,4 +64,6 @@
                 activateReminder(r);
             }
         }
+        */
+
     }
