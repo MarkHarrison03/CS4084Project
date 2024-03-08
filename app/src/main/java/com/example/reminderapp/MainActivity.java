@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,7 +39,16 @@ public class MainActivity extends AppCompatActivity {
         Button newRemindButton = findViewById(R.id.NewReminder);
         Button myRemindersButton = findViewById(R.id.MyReminders);
         Button mapButton = findViewById(R.id.map);
+        ImageButton profileButton = findViewById(R.id.profileButton);
 
+
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(profileIntent);
+            }
+        });
         newRemindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
