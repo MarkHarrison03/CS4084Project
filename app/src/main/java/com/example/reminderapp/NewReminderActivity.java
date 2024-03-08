@@ -187,14 +187,14 @@ public class NewReminderActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // Data successfully written to the database
-                        // You can perform any additional actions here
+                    //    Log.d("NewReminder", "Firebase push success");
+                    //    Intent newRemind = new Intent(NewReminderActivity.this, MainActivity.class);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Handle failure to write data to the database
+                        Log.d("NewReminder", "Firebase push failed");
                     }
                 });
 
