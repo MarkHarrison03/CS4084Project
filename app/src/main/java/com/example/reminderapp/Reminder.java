@@ -68,6 +68,10 @@ public class Reminder {
         }
     }
 
+    public String toString(){
+        String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n";
+        return s;
+    }
     //Method to get today's reminders and add them to a separate list to save on cpu and memory usage
     public void todayReminders(ArrayList<Reminder> reminders, User user) {
         LocalDate currentDate = LocalDate.now();
