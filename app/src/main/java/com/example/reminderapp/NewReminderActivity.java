@@ -179,7 +179,7 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
 
-        Reminder newReminder = new Reminder(description, label, newReminderTime, email);
+        Reminder newReminder = new Reminder(description, label, newReminderTime);
         System.out.println(newReminder.getEmail());
 
 
