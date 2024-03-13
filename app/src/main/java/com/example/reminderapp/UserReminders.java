@@ -30,45 +30,28 @@ public class UserReminders extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_reminder);
-
+        databaseQuery();
 
     }
 
-    public void displayReminders(){
-        ListView listView = findViewById(R.id.listView);
-        System.out.println("AAAAAAAAAAAAAAA");
-        // Initialize Adapter
-        ArrayList<Reminder> remindersList = databaseQuery();
-        System.out.println(remindersList);
 
-        ArrayAdapter<Reminder> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, remindersList);
 
-        listView.setAdapter(adapter);
-    }
+    public void databaseQuery(){
 
-    public ArrayList<Reminder> databaseQuery(){
-        ArrayList<Reminder> reminderList  = new ArrayList<Reminder>();
+        ArrayList<Reminder> reminderList = new ArrayList<>();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference remindersRef = database.getReference().child("reminders");
 
         Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail());
-        Log.d("RETRIEVE", Singleton.getInstance().getUserEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()) {
-                    Log.d("RETRIEVE", "test2");
-                }
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d("RETRIEVE", "test3");
-                    parseDataToReminder(snapshot.toString(),reminderList);
-                   // displayReminders();
-                    for(Reminder r : reminderList){
-                        System.out.println(r);
-                    }
+                    reminderList.add(parseDataToReminder(snapshot.toString()));
                 }
+                displayReminders(reminderList);
             }
 
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -76,11 +59,11 @@ public class UserReminders extends AppCompatActivity {
                 Toast.makeText(UserReminders.this, "Failed to fetch reminders: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        return reminderList;
+
     }
 
-    public Reminder parseDataToReminder(String data, ArrayList<Reminder> reminders) {
-
+    public Reminder parseDataToReminder(String data) {
+        ArrayList<Reminder> reminderList = new ArrayList<>();
         Map<String, Integer> monthMap = new HashMap<>();
         monthMap.put("JANUARY", 1);
         monthMap.put("FEBRUARY", 2);
@@ -96,9 +79,6 @@ public class UserReminders extends AppCompatActivity {
         monthMap.put("DECEMBER", 12);
 
         String[] splitString = data.split("[=,{}]");
-        for(int i = 0; i < splitString.length; i++) {
-            System.out.println(i + ":  " +  splitString[i] + "\n");
-        }
         String description = "";
         String title = "";
         String email = "";
@@ -121,9 +101,15 @@ public class UserReminders extends AppCompatActivity {
 
         }
         Reminder newReminder = new Reminder(description, title, datetime);
-        System.out.println(newReminder.getEmail() + " " + newReminder.getTitle() + " " + newReminder.getDescription() + " " + newReminder.getDateInput());
-        reminders.add(newReminder);
-        return null;
+        return newReminder;
     }
+
+    public void displayReminders(ArrayList<Reminder> reminderList){
+        ListView listView = findViewById(R.id.listView);
+        // Initialize Adapter
+        ArrayAdapter<Reminder> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reminderList);
+        listView.setAdapter(adapter);
     }
+
+}
 
