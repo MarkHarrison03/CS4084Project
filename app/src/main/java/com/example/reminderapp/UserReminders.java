@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.example.reminderapp.Utils;
 
 
 import java.lang.reflect.Array;
@@ -31,6 +32,10 @@ public class UserReminders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_reminder);
         databaseQuery();
+
+        for(Reminder r : Singleton.getInstance().getUserReminders()){
+            Log.d("TODAY", r.toString());
+        }
 
     }
 
@@ -49,7 +54,7 @@ public class UserReminders extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    reminderList.add(parseDataToReminder(snapshot.toString()));
+                    reminderList.add(Utils.parseDataToReminder(snapshot.toString()));
                 }
                 displayReminders(reminderList);
             }
@@ -60,48 +65,6 @@ public class UserReminders extends AppCompatActivity {
             }
         });
 
-    }
-
-    public Reminder parseDataToReminder(String data) {
-        ArrayList<Reminder> reminderList = new ArrayList<>();
-        Map<String, Integer> monthMap = new HashMap<>();
-        monthMap.put("JANUARY", 1);
-        monthMap.put("FEBRUARY", 2);
-        monthMap.put("MARCH", 3);
-        monthMap.put("APRIL", 4);
-        monthMap.put("MAY", 5);
-        monthMap.put("JUNE", 6);
-        monthMap.put("JULY", 7);
-        monthMap.put("AUGUST", 8);
-        monthMap.put("SEPTEMBER", 9);
-        monthMap.put("OCTOBER", 10);
-        monthMap.put("NOVEMBER", 11);
-        monthMap.put("DECEMBER", 12);
-
-        String[] splitString = data.split("[=,{}]");
-        String description = "";
-        String title = "";
-        String email = "";
-        LocalDateTime datetime = null;
-
-        for (int i = 0; i < splitString.length; i++) {
-            System.out.println(splitString[i]);
-            if(splitString[i].equals("description")){
-                 description = splitString[i+1];
-            }
-            if(splitString[i].equals(" title")){
-                 title = splitString[i+1];
-            }
-            if(splitString[i].equals(" dateInput")){
-                datetime = LocalDateTime.of(Integer.parseInt(splitString[i+13]), monthMap.get(splitString[i+7]).intValue(), Integer.parseInt(splitString[i+9]), Integer.parseInt(splitString[i+5]), Integer.parseInt(splitString[i+26]), Integer.parseInt(splitString[i+28]));
-            }
-            if(splitString[i].equals(" email")){
-                email = splitString[i+1];
-            }
-
-        }
-        Reminder newReminder = new Reminder(description, title, datetime);
-        return newReminder;
     }
 
     public void displayReminders(ArrayList<Reminder> reminderList){

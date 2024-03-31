@@ -148,11 +148,16 @@ public class NewReminderActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDayOfMonth) {
                 year = selectedYear;
-                month = selectedMonth;
+                month = selectedMonth + 1;
                 dayOfMonth = selectedDayOfMonth;
+                Log.d("Monthcheck", String.valueOf(month));
+
+                for(Reminder r : Singleton.getInstance().getUserReminders()){
+                    Log.d("TODAYREMINDER", r.toString());
+                }
                 // Set the date on the dateButton
                 Button dateButton = findViewById(R.id.DateButton);
-                dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month + 1, year));
+                dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month, year));
             }
         };
 
@@ -180,7 +185,7 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
         Reminder newReminder = new Reminder(description, label, newReminderTime);
-        System.out.println(newReminder.getEmail());
+        Log.d("year", String.valueOf(newReminder.getDateInput().getMonth()));
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");

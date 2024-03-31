@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Intent serviceIntent = new Intent(this, NotificationScheduleService.class);
+        startService(serviceIntent);
         Log.d("MainActivity", "Hello World");
 
         super.onCreate(savedInstanceState);
