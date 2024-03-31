@@ -29,7 +29,6 @@ public class NotificationScheduleService extends Service {
 
     @Override
     public void onCreate() {
-        System.out.println("service activated");
         super.onCreate();
         handler = new Handler(Looper.getMainLooper());
         scheduleTask();
@@ -57,47 +56,25 @@ public class NotificationScheduleService extends Service {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    System.out.println("okaythismethodhasbeencalled");
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Reminder currentReminder = Utils.parseDataToReminder(snapshot.toString());
-                    System.out.println("-----------------------");
-                    System.out.println("Selected reminder date:" + currentReminder.getDateInput().toLocalDate());
-                    System.out.println("Current date:" + LocalDate.now());
-                    System.out.println("ARE THEY THE SAME: " + LocalDate.now() == currentReminder.getDescription());
-
                     if(currentReminder.getDateInput().toLocalDate().toString().equals(LocalDate.now().toString())){
                         boolean unique = true;
                         for(Reminder r : Singleton.getInstance().getUserReminders()){
-                            System.out.println(currentReminder.getTitle());
-                            System.out.println(r.getTitle());
-                            System.out.println("next 4 booleans are desc, title, email and datetime");
-                            System.out.println(r.getDescription().equals(currentReminder.getDescription()));
-                            System.out.println(r.getTitle().equals(currentReminder.getTitle()));
-                            System.out.println(r.getEmail().equals(currentReminder.getEmail()));
-                            System.out.println(r.getDateInput().toLocalDate().isEqual(currentReminder.getDateInput().toLocalDate()));
                             if ((r.getDescription().equals(currentReminder.getDescription())) && (r.getTitle().equals(currentReminder.getTitle()) ) && (r.getEmail().equals(currentReminder.getEmail())) && (r.getDateInput().toLocalDate().equals(currentReminder.getDateInput().toLocalDate()))) {
-                                System.out.println(r.getTitle() + "is already in the reminders");
                                 unique = false;
                             }
                         }
 
                         if(unique) {
                             Singleton.getInstance().addReminderToArr(currentReminder);
-                            System.out.println("That evaluated to true");
-                            System.out.println(Singleton.getInstance().getUserReminders().contains(currentReminder));
-                            System.out.println(Singleton.getInstance().getUserReminders().contains(currentReminder));
+
                         }
-                        System.out.println("ADDED");
-                        System.out.println("-----------------------");
+
 
                     }
                 }
-                System.out.println("STARTING DB CHECK");
-                for(Reminder r: Singleton.getInstance().getUserReminders()) {
-                    System.out.println(Singleton.getInstance().getUserReminders().size());
-                    System.out.println(r.getDescription());
-                }
-                System.out.println("FINISHED DB CHECK");
+
             }
 
             public void onCancelled(@NonNull DatabaseError databaseError) {
