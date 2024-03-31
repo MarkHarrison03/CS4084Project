@@ -19,19 +19,7 @@
             android:name=".NotificationScheduleService"
             android:enabled="true"
             android:exported="true"></service>
-        <service
-            android:name=".NotificationScheduler"
-            android:enabled="true"
-            android:exported="true" />
 
-        <activity
-            android:name=".NotificationPullRunnable"
-            android:exported="false" />
-        <activity
-            android:name=".NotificationScheduleCheck"
-            android:exported="false"
-            android:label="@string/title_activity_notification_schedule_check"
-            android:theme="@style/Theme.ReminderApp" />
         <activity
             android:name=".UserReminders"
             android:exported="false" />
