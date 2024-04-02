@@ -9,7 +9,6 @@ public class Singleton {
     private ArrayList<Reminder> currentUserReminders;
 
     private Singleton() {
-
         this.currentUserEmail = null;
         currentUserReminders = new ArrayList<>();
     }

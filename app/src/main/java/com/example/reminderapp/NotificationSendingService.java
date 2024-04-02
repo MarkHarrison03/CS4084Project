@@ -10,11 +10,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class NotificationSendingService extends Service {
     private Handler handler;
-    private final long INTERVAL = 500;
+    private final long INTERVAL = 2000;
 
     @Override
     public void onCreate() {
@@ -30,10 +31,11 @@ public class NotificationSendingService extends Service {
             public void run() {
                 //Parse reminders and send notification
                 System.out.println("Started");
-                Reminder r = new Reminder();
                 ArrayList<Reminder> userReminders = Singleton.getInstance().getUserReminders();
-                for(Reminder reminder : userReminders){
-                    if(r.activateReminder(reminder)){
+                for (Reminder reminder : userReminders) {
+                    System.out.println(reminder);
+
+                    if (activateReminder(reminder)) {
                         System.out.println("Activated!");
                         createNotification(reminder);
                     }
@@ -61,7 +63,7 @@ public class NotificationSendingService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
                 // replace ic_notification with your own icon
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(reminder.getTitle() + reminder.getDateInput())
+                .setContentTitle(reminder.getTitle())
                 .setContentText(reminder.getDescription())
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         System.out.println("hi!2");
@@ -72,4 +74,11 @@ public class NotificationSendingService extends Service {
         notificationManager.notify(1, builder.build());
         System.out.println("hi!4");
     }
+
+    private boolean activateReminder(Reminder reminder) {
+        LocalDateTime now = LocalDateTime.now();
+        return reminder.getDateInput().getHour() == now.getHour() &&
+                reminder.getDateInput().getMinute() == now.getMinute();
+    }
+
 }
