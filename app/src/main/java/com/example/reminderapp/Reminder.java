@@ -59,23 +59,20 @@ public class Reminder {
 
 
     public boolean activateReminder(Reminder reminder) {
-        return reminder.dateInput == LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        return reminder.dateInput.getHour() == now.getHour() &&
+                reminder.dateInput.getMinute() == now.getMinute();
     }
 
-    public void reminderParser(ArrayList<Reminder> reminders) {
-        for (Reminder r : reminders) {
-            activateReminder(r);
-        }
-    }
-
-    public String toString(){
+    public String toString() {
         String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n";
         return s;
     }
+
     //Method to get today's reminders and add them to a separate list to save on cpu and memory usage
-    public void todayReminders(ArrayList<Reminder> reminders, User user) {
+    public void todayReminders(User user) {
         LocalDate currentDate = LocalDate.now();
-        reminders = user.getUserReminders();
+        ArrayList<Reminder> reminders = user.getUserReminders();
         for (Reminder r : reminders) {
             if (r.getDateInput().toLocalDate().equals(currentDate)) {
                 user.addTodayReminder(r);

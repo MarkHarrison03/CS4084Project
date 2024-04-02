@@ -19,11 +19,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.example.reminderapp.Utils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class NotificationScheduleService extends Service {
     private Handler handler;
-    private final long INTERVAL = 10000;
+    private final long INTERVAL = 1000;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference remindersRef = database.getReference().child("reminders");
 
@@ -41,7 +40,6 @@ public class NotificationScheduleService extends Service {
                 // Code to check the database for reminders
                 // and store them locally
                 checkAndStoreReminders();
-
                 // Schedule the task again after INTERVAL
                 handler.postDelayed(this, INTERVAL);
             }
@@ -58,23 +56,20 @@ public class NotificationScheduleService extends Service {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Reminder currentReminder = Utils.parseDataToReminder(snapshot.toString());
-                    if(currentReminder.getDateInput().toLocalDate().toString().equals(LocalDate.now().toString())){
+                    if (currentReminder.getDateInput().toLocalDate().toString().equals(LocalDate.now().toString())) {
                         boolean unique = true;
-                        for(Reminder r : Singleton.getInstance().getUserReminders()){
-                            if ((r.getDescription().equals(currentReminder.getDescription())) && (r.getTitle().equals(currentReminder.getTitle()) ) && (r.getEmail().equals(currentReminder.getEmail())) && (r.getDateInput().toLocalDate().equals(currentReminder.getDateInput().toLocalDate()))) {
+                        for (Reminder r : Singleton.getInstance().getUserReminders()) {
+                            if ((r.getDescription().equals(currentReminder.getDescription())) && (r.getTitle().equals(currentReminder.getTitle())) && (r.getEmail().equals(currentReminder.getEmail())) && (r.getDateInput().toLocalDate().equals(currentReminder.getDateInput().toLocalDate()))) {
                                 unique = false;
                             }
                         }
 
-                        if(unique) {
+                        if (unique) {
                             Singleton.getInstance().addReminderToArr(currentReminder);
 
                         }
-
-
                     }
                 }
-
             }
 
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -82,7 +77,6 @@ public class NotificationScheduleService extends Service {
                 Toast.makeText(NotificationScheduleService.this, "Failed to fetch reminders: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
