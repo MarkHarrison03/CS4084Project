@@ -49,7 +49,6 @@ public class NotificationScheduleService extends Service {
     private void checkAndStoreReminders() {
         Log.d("Running", "running now!");
 
-
         Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -60,7 +59,9 @@ public class NotificationScheduleService extends Service {
                         boolean unique = true;
                         for (Reminder r : Singleton.getInstance().getUserReminders()) {
                             if ((r.getDescription().equals(currentReminder.getDescription())) && (r.getTitle().equals(currentReminder.getTitle())) && (r.getEmail().equals(currentReminder.getEmail())) && (r.getDateInput().toLocalDate().equals(currentReminder.getDateInput().toLocalDate()))) {
-                                unique = false;
+                                if(r.getDateInput().getHour() == currentReminder.getDateInput().getHour() && r.getDateInput().getMinute() == currentReminder.getDateInput().getMinute() ) {
+                                    unique = false;
+                                }
                             }
                         }
 
