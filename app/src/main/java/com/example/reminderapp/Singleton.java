@@ -6,7 +6,7 @@ public class Singleton {
     private  String currentUserEmail;
     private static Singleton instance;
 
-    private ArrayList<Reminder> currentUserReminders ;
+    private ArrayList<Reminder> currentUserReminders;
 
     private Singleton() {
 

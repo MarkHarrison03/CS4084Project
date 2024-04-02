@@ -20,6 +20,11 @@
             android:enabled="true"
             android:exported="true"></service>
 
+        <service
+            android:name=".NotificationSendingService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".UserReminders"
             android:exported="false" />
