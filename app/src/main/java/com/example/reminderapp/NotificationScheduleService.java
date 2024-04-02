@@ -48,6 +48,8 @@ public class NotificationScheduleService extends Service {
 
     private void checkAndStoreReminders() {
         Log.d("Running", "running now!");
+        System.out.println(Singleton.getInstance().getUserReminders().size());
+
 
 
         Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail());
@@ -56,11 +58,13 @@ public class NotificationScheduleService extends Service {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Reminder currentReminder = Utils.parseDataToReminder(snapshot.toString());
-                    if (currentReminder.getDateInput().toLocalDate().toString().equals(LocalDate.now().toString())) {
+                    if (currentReminder.getDgoateInput().toLocalDate().toString().equals(LocalDate.now().toString())) {
                         boolean unique = true;
                         for (Reminder r : Singleton.getInstance().getUserReminders()) {
                             if ((r.getDescription().equals(currentReminder.getDescription())) && (r.getTitle().equals(currentReminder.getTitle())) && (r.getEmail().equals(currentReminder.getEmail())) && (r.getDateInput().toLocalDate().equals(currentReminder.getDateInput().toLocalDate()))) {
-                                unique = false;
+                                if(r.getDateInput().getHour() == currentReminder.getDateInput().getHour() && r.getDateInput().getMinute() == currentReminder.getDateInput().getMinute() ) {
+                                    unique = false;
+                                }
                             }
                         }
 
