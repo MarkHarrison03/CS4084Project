@@ -58,11 +58,6 @@ public class Reminder {
     }
 
 
-    public boolean activateReminder(Reminder reminder) {
-        LocalDateTime now = LocalDateTime.now();
-        return reminder.dateInput.getHour() == now.getHour() &&
-                reminder.dateInput.getMinute() == now.getMinute();
-    }
 
     public String toString() {
         String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n";

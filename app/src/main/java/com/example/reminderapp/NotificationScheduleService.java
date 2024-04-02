@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,13 +18,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.example.reminderapp.Utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class NotificationScheduleService extends Service {
     private Handler handler;
-    private final long INTERVAL = 1000;
+    private final long INTERVAL = 30000;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference remindersRef = database.getReference().child("reminders");
 
@@ -40,6 +43,8 @@ public class NotificationScheduleService extends Service {
                 // Code to check the database for reminders
                 // and store them locally
                 checkAndStoreReminders();
+
+
                 // Schedule the task again after INTERVAL
                 handler.postDelayed(this, INTERVAL);
             }
@@ -67,7 +72,6 @@ public class NotificationScheduleService extends Service {
 
                         if (unique) {
                             Singleton.getInstance().addReminderToArr(currentReminder);
-
                         }
                     }
                 }
