@@ -17,11 +17,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.text.TextUtils;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
+
+
+
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -78,24 +91,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        private void initializePlacesSDK() {
-            // Define a variable to hold the Places API key.
-            String apiKey = BuildConfig.PLACES_API_KEY;
 
-            // Log an error if apiKey is not set.
-            if (TextUtils.isEmpty(apiKey) || apiKey.equals("DEFAULT_API_KEY")) {
-                Log.e("Places test", "No api key");
-                finish();
-                return;
-            }
+        // Define a variable to hold the Places API key.
+        String apiKey = BuildConfig.PLACES_API_KEY;
 
-            // Initialize the SDK
-            Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey);
-
-            // Create a new PlacesClient instance
-            PlacesClient placesClient = Places.createClient(this);
+        // Log an error if apiKey is not set.
+        if (TextUtils.isEmpty(apiKey)) {
+            Log.e("Places test", "No api key");
+            finish();
+            return;
         }
 
+        // Initialize the SDK
+        Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey);
+
+        // Create a new PlacesClient instance
+        PlacesClient placesClient = Places.createClient(this);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
         private void createNotificationChannel() {
         CharSequence name = "My Notification Channel";
         String description = "Channel Description";
