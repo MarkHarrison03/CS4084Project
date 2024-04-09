@@ -48,4 +48,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+
+
+    // Initialize the AutocompleteSupportFragment.
+    AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+            getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+    // Specify the types of place data to return.
+    autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+    // Set up a PlaceSelectionListener to handle the response.
+    autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        @Override
+        public void onPlaceSelected(@NonNull Place place) {
+            // TODO: Get info about the selected place.
+            Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+        }
+
+
+        @Override
+        public void onError(@NonNull Status status) {
+            // TODO: Handle the error.
+            Log.i(TAG, "An error occurred: " + status);
+        }
+    });
+
+
+
+
 }

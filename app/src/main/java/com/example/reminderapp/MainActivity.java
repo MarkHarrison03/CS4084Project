@@ -77,10 +77,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(newMap);
             }
         });
-    }
 
+        private void initializePlacesSDK() {
+            // Define a variable to hold the Places API key.
+            String apiKey = BuildConfig.PLACES_API_KEY;
 
-    private void createNotificationChannel() {
+            // Log an error if apiKey is not set.
+            if (TextUtils.isEmpty(apiKey) || apiKey.equals("DEFAULT_API_KEY")) {
+                Log.e("Places test", "No api key");
+                finish();
+                return;
+            }
+
+            // Initialize the SDK
+            Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey);
+
+            // Create a new PlacesClient instance
+            PlacesClient placesClient = Places.createClient(this);
+        }
+
+        private void createNotificationChannel() {
         CharSequence name = "My Notification Channel";
         String description = "Channel Description";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
