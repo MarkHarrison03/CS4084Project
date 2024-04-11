@@ -41,46 +41,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                String placeName = place.getName();
-                LatLng latLng = place.getLatLng();
-                if (latLng != null) {
-                    double latitude = latLng.latitude;
-                    double longitude = latLng.longitude;
-                    Log.i(TAG, "Place: " + placeName + ", Lat: " + latitude + ", Lng: " + longitude);
-                    // You can use the latitude and longitude values here
-                } else {
-                    Log.e(TAG, "LatLng object is null for place: " + placeName);
-                    // Handle the case where LatLng object is null
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-
-
-
-
-
-
-
-
-
-
     }
 
     /**
