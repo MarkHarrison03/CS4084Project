@@ -5,6 +5,7 @@
 
     import java.lang.reflect.Array;
     import java.time.*;
+    import java.time.format.DateTimeFormatter;
     import java.util.ArrayList;
 
     public class Reminder {
@@ -13,6 +14,11 @@
         private LocalDateTime dateInput;
         private String email = Singleton.getInstance().getUserEmail();
 
+
+
+        public Reminder() {
+            // Default constructor required for Firebase deserialization
+        }
 
         public Reminder(String description, String title, LocalDateTime dateInput, String email){
             this.description = description;
@@ -77,6 +83,8 @@
                     user.removeTodayReminder(rem);
                 }
             }
+
+
         }
 
     }

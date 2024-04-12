@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         newRemindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("MainActivity", "Hello World");
+                Log.d("MainActivity", "New Reminder Button clicked");
                 Intent newRemind = new Intent(MainActivity.this, NewReminderActivity.class);
                 startActivity(newRemind);
 
@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
         myRemindersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Notification Test", "clicked");
+                Log.d("MainActivity", "View Reminder Button clicked");
+                Intent viewRemind = new Intent(MainActivity.this, ViewReminderActivity.class);
+                startActivity(viewRemind);
 
             }
         });
