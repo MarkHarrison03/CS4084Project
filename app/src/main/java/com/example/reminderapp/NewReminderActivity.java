@@ -37,6 +37,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -53,6 +54,7 @@ public class NewReminderActivity extends AppCompatActivity {
     int dayOfMonth;
     boolean isLocation = false;
 
+
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String email = Singleton.getInstance().getUserEmail();
 
@@ -68,24 +70,25 @@ public class NewReminderActivity extends AppCompatActivity {
         Log.d("NewReminder", "this mf making a reminder");
 
 
-        List<String> locations_array = Arrays.asList("Saved Locations", "New Location");
+        List<String> locationsList = new ArrayList<>(Arrays.asList("Saved Locations", "New Location"));
+
         FirebaseApp.initializeApp(this);
-        Spinner locations = (Spinner) findViewById(R.id.LocationSpinner);
-        locations.setVisibility(View.GONE);
+        Spinner locationsSpinner = (Spinner) findViewById(R.id.LocationSpinner);
+        locationsSpinner.setVisibility(View.GONE);
 
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations_array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locationsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        locations.setAdapter(adapter);
+        locationsSpinner.setAdapter(adapter);
 
-        locations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        locationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selectedLocation = (String) parent.getItemAtPosition(position);
             if (selectedLocation.equals("New Location")) {
                 // Show the dialog when "New Location" is selected
-                newLocation_dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this);
+                newLocation_dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locationsList, locationsSpinner);
             }
         }
             @Override
@@ -122,10 +125,10 @@ public class NewReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (((CheckBox) view).isChecked()) {
-                    locations.setVisibility(View.VISIBLE);
+                    locationsSpinner.setVisibility(View.VISIBLE);
                     isLocation = true;
                 } else {
-                    locations.setVisibility(View.GONE);
+                    locationsSpinner.setVisibility(View.GONE);
                     isLocation = false;
                 }
             }

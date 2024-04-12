@@ -8,6 +8,9 @@ import android.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,17 +23,26 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.util.Arrays;
+import java.util.List;
+
 
 public class newLocation_dialog {
 
-    public static void showDialog(Context context, FragmentActivity fragmentActivity) {
+    public static void showDialog(Context context, FragmentActivity fragmentActivity, List<String> locationsList, Spinner locationsSpinner) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = fragmentActivity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.newlocation_dialog, null);
         builder.setView(dialogView)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Handle positive button click
+                        EditText locationNicknameEditText = dialogView.findViewById(R.id.location_nickname);
+                        String locationNickname = locationNicknameEditText.getText().toString();
+
+                        String locationData = ""; // Replace this with the actual location data
+                        locationsList.add(locationData + " (" + locationNickname + ")");
+
+                        ArrayAdapter<String> adapter = (ArrayAdapter<String>) locationsSpinner.getAdapter();
+                        adapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
