@@ -61,11 +61,16 @@ public class newLocation_dialog {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
                 String placeName = place.getName();
+                String placeAddress = place.getAddress();
                 LatLng latLng = place.getLatLng();
                 if (latLng != null) {
                     double latitude = latLng.latitude;
                     double longitude = latLng.longitude;
                     Log.i(TAG, "Place: " + placeName + ", Lat: " + latitude + ", Lng: " + longitude);
+
+                    Location selectedLocation = new Location(placeName, placeAddress, latitude, longitude, 0);
+
+                    Log.d(TAG, "Selected Location: " + selectedLocation.toString());
                 } else {
                     Log.e(TAG, "LatLng object is null for place: " + placeName);
                 }
