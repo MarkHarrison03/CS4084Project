@@ -60,7 +60,7 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
     String location;
-
+    Button submitbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class NewReminderActivity extends AppCompatActivity {
 
         List<String> locationsList = new ArrayList<>(Arrays.asList("Saved Locations", "New Location"));
 
-        FirebaseApp.initializeApp(this);
+
         Spinner locationsSpinner = (Spinner) findViewById(R.id.LocationSpinner);
         locationsSpinner.setVisibility(View.GONE);
 
@@ -87,8 +87,9 @@ public class NewReminderActivity extends AppCompatActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selectedLocation = (String) parent.getItemAtPosition(position);
             if (selectedLocation.equals("New Location")) {
-                // Show the dialog when "New Location" is selected
-                newLocation_dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locationsList, locationsSpinner);
+                newLocation_dialog dialog = new newLocation_dialog();
+                dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locationsList, locationsSpinner);
+
             }
         }
             @Override
@@ -135,12 +136,12 @@ public class NewReminderActivity extends AppCompatActivity {
         });
 
 
-        Button submitbutton = findViewById(R.id.SubmitButton);
+
         submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("NewReminder", "Submit button clicked");
-
+                submitbutton.setEnabled(false);
                 submittedReminder();
 
             }
@@ -246,12 +247,15 @@ public class NewReminderActivity extends AppCompatActivity {
                         Log.d("NewReminder", "Firebase push success");
                         Intent newRemind = new Intent(NewReminderActivity.this, MainActivity.class);
                         startActivity(newRemind);
+
+                        submitbutton.setEnabled(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("NewReminder", "Firebase push failed");
+                        submitbutton.setEnabled(true);
                     }
                 });
 
