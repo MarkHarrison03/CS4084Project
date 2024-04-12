@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -67,22 +68,33 @@ public class NewReminderActivity extends AppCompatActivity {
         Log.d("NewReminder", "this mf making a reminder");
 
 
-        List<String> locations_array = Arrays.asList("home", "school", "work");
+        List<String> locations_array = Arrays.asList("Saved Locations", "New Location");
         FirebaseApp.initializeApp(this);
         Spinner locations = (Spinner) findViewById(R.id.LocationSpinner);
         locations.setVisibility(View.GONE);
 
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-            // Hide the AutocompleteSupportFragment
-            autocompleteFragment.getView().setVisibility(View.GONE);
-        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations_array);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locations.setAdapter(adapter);
+
+        locations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String selectedLocation = (String) parent.getItemAtPosition(position);
+            if (selectedLocation.equals("New Location")) {
+                // Show the dialog when "New Location" is selected
+                newLocation_dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this);
+            }
+        }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+
 
         CheckBox locationCheck = findViewById(R.id.LocationCheck);
         Button timeButton = findViewById(R.id.TimeButton);
@@ -110,16 +122,9 @@ public class NewReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (((CheckBox) view).isChecked()) {
-                    if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-                        autocompleteFragment.getView().setVisibility(View.VISIBLE);
-                    }
-
                     locations.setVisibility(View.VISIBLE);
                     isLocation = true;
                 } else {
-                    if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-                        autocompleteFragment.getView().setVisibility(View.GONE);
-                    }
                     locations.setVisibility(View.GONE);
                     isLocation = false;
                 }
@@ -140,30 +145,6 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
 
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                String placeName = place.getName();
-                LatLng latLng = place.getLatLng();
-                if (latLng != null) {
-                    double latitude = latLng.latitude;
-                    double longitude = latLng.longitude;
-                    Log.i(TAG, "Place: " + placeName + ", Lat: " + latitude + ", Lng: " + longitude);
-
-                } else {
-                    Log.e(TAG, "LatLng object is null for place: " + placeName);
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
 
 
 
