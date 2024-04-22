@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
-
+    private PlacesClient placesClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent serviceIntent = new Intent(this, NotificationScheduleService.class);
@@ -92,8 +92,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // Define a variable to hold the Places API key.
-        String apiKey = BuildConfig.PLACES_API_KEY;
+        String apiKey = BuildConfig.API_KEY;
 
         // Log an error if apiKey is not set.
         if (TextUtils.isEmpty(apiKey)) {
@@ -106,16 +105,7 @@ public class MainActivity extends AppCompatActivity {
         Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey);
 
         // Create a new PlacesClient instance
-        PlacesClient placesClient = Places.createClient(this);
-
-
-
-
-
-
-
-
-
+        placesClient = Places.createClient(this);
 
 
 
@@ -126,6 +116,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+
+
+
         private void createNotificationChannel() {
         CharSequence name = "My Notification Channel";
         String description = "Channel Description";
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     private void createNotification(Reminder reminder) {
         System.out.println("hi!");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
-                // replace ic_notification with your own icon
+
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(reminder.getTitle() + reminder.getDateInput())
                 .setContentText(reminder.getDescription())

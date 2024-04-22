@@ -1,32 +1,35 @@
 package com.example.reminderapp;
 
-import static android.content.ContentValues.TAG;
+        import static android.content.ContentValues.TAG;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
+        import android.app.AlertDialog;
+        import android.content.Context;
+        import android.content.DialogInterface;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.widget.ArrayAdapter;
+        import android.widget.EditText;
+        import android.widget.SeekBar;
+        import android.widget.Spinner;
+        import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
+        import androidx.annotation.NonNull;
+        import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+        import com.google.android.gms.common.api.Status;
+        import com.google.android.gms.maps.model.LatLng;
+        import com.google.android.gms.tasks.OnFailureListener;
+        import com.google.android.gms.tasks.OnSuccessListener;
+        import com.google.android.libraries.places.api.model.Place;
+        import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+        import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.List;
 
 public class newLocation_dialog {
 
@@ -34,51 +37,30 @@ public class newLocation_dialog {
     private static String selectedLocationData;
     int accuracyRadius = 0;
 
-    public void showDialog(Context context, FragmentActivity fragmentActivity, List<String> locationsList, Spinner locationsSpinner) {
-        // Create an AlertDialog.Builder instance
+    public void showDialog(Context context, FragmentActivity fragmentActivity, Spinner locationsSpinner) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        // Inflate the dialog layout
         LayoutInflater inflater = fragmentActivity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.newlocation_dialog, null);
 
-        // Set up the positive button (OK)
         builder.setView(dialogView)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         EditText locationNicknameEditText = dialogView.findViewById(R.id.location_nickname);
                         locationNickname = locationNicknameEditText.getText().toString();
-
-                        ArrayAdapter<String> adapter = (ArrayAdapter<String>) locationsSpinner.getAdapter();
-                        List<String> itemList = new ArrayList<>();
-                        for(int i=0; i<adapter.getCount();i++){
-                            itemList.add(adapter.getItem(i));
-                        }
-
-                        itemList.add(locationNickname);  //Add new item
-
-                        adapter.clear();
-                        adapter.addAll(itemList);
-
-                        adapter.notifyDataSetChanged();
+                        updateSpinner(locationsSpinner, locationNickname);
                     }
                 })
-
-                // Set up the negative button (Cancel)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // Handle negative button click
                         dialog.cancel();
                     }
                 });
 
-        // Get references to UI elements in the dialog view
         SeekBar accuracyRadiusSeekBar = dialogView.findViewById(R.id.accuracy_radius_seekbar);
         TextView accuracyRadiusValueTextView = dialogView.findViewById(R.id.accuracy_radius_value);
 
-        // Set a listener on the seek bar to update the text of the accuracy radius value
         accuracyRadiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -93,29 +75,43 @@ public class newLocation_dialog {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 fragmentActivity.getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        // Specify which fields you want to retrieve when selecting a place
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
-        // Add a listener that will be called when a place is selected
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                String placeName = place.getName();
-                String placeAddress = place.getAddress();
                 LatLng latLng = place.getLatLng();
                 if (latLng != null) {
                     double latitude = latLng.latitude;
                     double longitude = latLng.longitude;
 
-                    Location location = new Location(locationNickname, placeAddress, latitude, longitude, accuracyRadius);
+                    Location location = new Location(locationNickname, place.getAddress(), latitude, longitude, accuracyRadius);
+                    Singleton.getInstance().addLocation(location);
+                    FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
+                    DatabaseReference locationsRef = database.getReference("locations");
+                    String userId = Singleton.getInstance().getCurrentUserId();
+                    DatabaseReference userLocationsRef = locationsRef.child(userId);
+                    userLocationsRef.push().setValue(location)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("NewLocation", "Firebase push success");
+                                    updateSpinner(locationsSpinner, locationNickname);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("NewLocation", "Firebase push failed");
+                                }
+                            });
 
-                    selectedLocationData = placeName + " (" + placeAddress + ")";
+                    selectedLocationData = place.getName() + " (" + place.getAddress() + ")";
                 } else {
-                    Log.e(TAG, "LatLng object is null for place: " + placeName);
+                    Log.e(TAG, "LatLng object is null for place: " + place.getName());
                 }
             }
 
@@ -125,8 +121,26 @@ public class newLocation_dialog {
             }
         });
 
-        // Show the alert dialog
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void updateSpinner(Spinner locationsSpinner, String newLocation) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) locationsSpinner.getAdapter();
+        List<String> itemList = new ArrayList<>();
+        List<Location> locations = Singleton.getInstance().getCurrentUserLocationsForReminders();
+
+        if (locations != null) {
+            for (Location location : locations) {
+                String nickname = location.getNickname();
+                if (nickname != null) {
+                    itemList.add(nickname);
+                }
+            }
+        }
+        itemList.add(newLocation);
+        adapter.clear();
+        adapter.addAll(itemList);
+        adapter.notifyDataSetChanged();
     }
 }

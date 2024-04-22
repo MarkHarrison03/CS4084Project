@@ -35,6 +35,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,19 +54,23 @@ public class NewReminderActivity extends AppCompatActivity {
     int month;
     int dayOfMonth;
     boolean isLocation = false;
+    boolean isDateSet = false;
 
+    boolean isTimeSet = false;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String email = Singleton.getInstance().getUserEmail();
 
 
     String location;
-    Button submitbutton;
+    Button submitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_reminder);
+
+        submitButton = findViewById(R.id.SubmitButton); // Initialization
 
         Log.d("NewReminder", "this mf making a reminder");
 
@@ -77,27 +82,26 @@ public class NewReminderActivity extends AppCompatActivity {
         locationsSpinner.setVisibility(View.GONE);
 
 
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locationsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationsSpinner.setAdapter(adapter);
 
         locationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String selectedLocation = (String) parent.getItemAtPosition(position);
-            if (selectedLocation.equals("New Location")) {
-                newLocation_dialog dialog = new newLocation_dialog();
-                dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locationsList, locationsSpinner);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedLocation = (String) parent.getItemAtPosition(position);
+                if (selectedLocation.equals("New Location")) {
+                    newLocation_dialog dialog = new newLocation_dialog();
+                    dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locationsList, locationsSpinner);
 
+                }
             }
-        }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Do nothing
             }
         });
-
 
 
         CheckBox locationCheck = findViewById(R.id.LocationCheck);
@@ -136,39 +140,17 @@ public class NewReminderActivity extends AppCompatActivity {
         });
 
 
-
-        submitbutton.setOnClickListener(new View.OnClickListener() {
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("NewReminder", "Submit button clicked");
-                submitbutton.setEnabled(false);
+                submitButton.setEnabled(false);
                 submittedReminder();
 
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        submitButton.setEnabled(false);
     }
 
     private void showTimePickerDialog() {
@@ -180,6 +162,10 @@ public class NewReminderActivity extends AppCompatActivity {
                 // Set the time on the timeButton
                 Button timeButton = findViewById(R.id.TimeButton);
                 timeButton.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                isTimeSet = true;
+                if (isDateSet) {
+                    submitButton.setEnabled(true);
+                }
             }
         };
 
@@ -207,6 +193,10 @@ public class NewReminderActivity extends AppCompatActivity {
                 // Set the date on the dateButton
                 Button dateButton = findViewById(R.id.DateButton);
                 dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month, year));
+                isDateSet = true;
+                if (isTimeSet) {
+                    submitButton.setEnabled(true);
+                }
             }
         };
 
@@ -248,18 +238,21 @@ public class NewReminderActivity extends AppCompatActivity {
                         Intent newRemind = new Intent(NewReminderActivity.this, MainActivity.class);
                         startActivity(newRemind);
 
-                        submitbutton.setEnabled(true);
+                        submitButton.setEnabled(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("NewReminder", "Firebase push failed");
-                        submitbutton.setEnabled(true);
+                        submitButton.setEnabled(true);
                     }
                 });
 
-
+        if (!isDateSet || !isTimeSet) {
+            Toast.makeText(this, "Please select a date and time", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 
 }

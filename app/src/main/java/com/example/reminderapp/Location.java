@@ -7,6 +7,9 @@ public class Location {
     private double longitude;
     private int accuracyRadius; //determines the accuracy of the reminder by setting a radius around the location
 
+
+    public Location() {
+    }
     // Constructor
     public Location(String nickname, String address, double latitude, double longitude, int accuracyRadius) {
         this.nickname = nickname;

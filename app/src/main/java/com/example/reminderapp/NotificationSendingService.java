@@ -61,7 +61,7 @@ public class NotificationSendingService extends Service {
     private void createNotification(Reminder reminder) {
         System.out.println("hi!");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
-                // replace ic_notification with your own icon
+
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(reminder.getTitle())
                 .setContentText(reminder.getDescription())
