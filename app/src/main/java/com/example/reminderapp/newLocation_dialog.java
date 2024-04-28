@@ -2,6 +2,7 @@ package com.example.reminderapp;
 
         import static android.content.ContentValues.TAG;
 
+        import android.app.Activity;
         import android.app.AlertDialog;
         import android.content.Context;
         import android.content.DialogInterface;
@@ -29,26 +30,73 @@ package com.example.reminderapp;
 
         import java.util.ArrayList;
         import java.util.Arrays;
+        import java.util.Collections;
         import java.util.List;
 
 public class newLocation_dialog {
-
+    private Location tempLocation;
     private String locationNickname;
     private static String selectedLocationData;
     int accuracyRadius = 0;
+    private Context context;
+    private List<Location> locations = new ArrayList<>(); // Add this line
+    private FragmentActivity fragmentActivity;
 
-    public void showDialog(Context context, FragmentActivity fragmentActivity, Spinner locationsSpinner) {
+    public void showDialog(Activity activity,FragmentActivity fragmentActivity, List<Location> locations, Spinner locationsSpinner) {
+
+        this.context = activity;
+        this.fragmentActivity = fragmentActivity;
+        this.locations = locations;
+
+        ArrayAdapter<Location> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, locations);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        locationsSpinner.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = fragmentActivity.getLayoutInflater();
+        LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.newlocation_dialog, null);
-
-        builder.setView(dialogView)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setView(dialogView);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         EditText locationNicknameEditText = dialogView.findViewById(R.id.location_nickname);
                         locationNickname = locationNicknameEditText.getText().toString();
-                        updateSpinner(locationsSpinner, locationNickname);
+
+                        if (tempLocation != null) {
+                            tempLocation.setNickname(locationNickname);
+                            adapter.notifyDataSetChanged();
+                        }
+
+
+                        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
+                        DatabaseReference locationsRef = database.getReference("locations");
+                        String userId = Singleton.getInstance().getCurrentUserId();
+                        DatabaseReference userLocationsRef = locationsRef.child(userId);
+                        userLocationsRef.push().setValue(tempLocation)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("NewLocation", "Firebase push success");
+                                        locations.add(tempLocation);
+                                        adapter.notifyDataSetChanged();
+
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("NewLocation", "Firebase push failed");
+                                    }
+                                });
+
+
+
+
+
+
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -90,24 +138,13 @@ public class newLocation_dialog {
 
                     Location location = new Location(locationNickname, place.getAddress(), latitude, longitude, accuracyRadius);
                     Singleton.getInstance().addLocation(location);
-                    FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
-                    DatabaseReference locationsRef = database.getReference("locations");
-                    String userId = Singleton.getInstance().getCurrentUserId();
-                    DatabaseReference userLocationsRef = locationsRef.child(userId);
-                    userLocationsRef.push().setValue(location)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("NewLocation", "Firebase push success");
-                                    updateSpinner(locationsSpinner, locationNickname);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("NewLocation", "Firebase push failed");
-                                }
-                            });
+
+                    adapter.notifyDataSetChanged();
+
+                    tempLocation = new Location("", place.getAddress(), latitude, longitude, accuracyRadius); // Change this line
+
+
+
 
                     selectedLocationData = place.getName() + " (" + place.getAddress() + ")";
                 } else {
@@ -122,25 +159,18 @@ public class newLocation_dialog {
         });
 
         AlertDialog dialog = builder.create();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (com.google.android.libraries.places.api.Places.isInitialized()) {
+                    com.google.android.libraries.places.api.Places.deinitialize();
+                }
+            }
+        });
         dialog.show();
     }
 
-    private void updateSpinner(Spinner locationsSpinner, String newLocation) {
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) locationsSpinner.getAdapter();
-        List<String> itemList = new ArrayList<>();
-        List<Location> locations = Singleton.getInstance().getCurrentUserLocationsForReminders();
 
-        if (locations != null) {
-            for (Location location : locations) {
-                String nickname = location.getNickname();
-                if (nickname != null) {
-                    itemList.add(nickname);
-                }
-            }
-        }
-        itemList.add(newLocation);
-        adapter.clear();
-        adapter.addAll(itemList);
-        adapter.notifyDataSetChanged();
-    }
+
+
 }

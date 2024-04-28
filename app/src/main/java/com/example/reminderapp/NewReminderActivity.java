@@ -16,8 +16,11 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import android.app.Activity;
@@ -64,6 +67,9 @@ public class NewReminderActivity extends AppCompatActivity {
 
     String location;
     Button submitButton;
+    List<Location> locations = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,24 +81,71 @@ public class NewReminderActivity extends AppCompatActivity {
         Log.d("NewReminder", "this mf making a reminder");
 
 
-        List<String> locationsList = new ArrayList<>(Arrays.asList("Saved Locations", "New Location"));
-
 
         Spinner locationsSpinner = (Spinner) findViewById(R.id.LocationSpinner);
         locationsSpinner.setVisibility(View.GONE);
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locationsList);
+        Location savedLocations = new Location();
+        savedLocations.setNickname("Saved Locations");
+        locations.add(savedLocations);
+
+        Location newLocation = new Location();
+        newLocation.setNickname("New Location");
+        locations.add(newLocation);
+
+        LocationAdapter adapter = new LocationAdapter(this, locations);
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationsSpinner.setAdapter(adapter);
+
+
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference locationsRef = database.getReference("locations");
+        String userId = Singleton.getInstance().getCurrentUserId();
+        DatabaseReference userLocationsRef = locationsRef.child(userId);
+        userLocationsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                    Location location = locationSnapshot.getValue(Location.class);
+                    if (location != null) {
+                        locations.add(location);
+                    }
+                }
+
+                // Update the spinner with the retrieved locations
+                updateSpinner(locationsSpinner);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("NewReminderActivity", "Firebase read failed");
+            }
+        });
+
+
+
+
+
 
         locationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedLocation = (String) parent.getItemAtPosition(position);
-                if (selectedLocation.equals("New Location")) {
+                Object item = parent.getItemAtPosition(position);
+                boolean showDialog = false;
+                if (item instanceof Location) {
+                    Location selectedLocation = (Location) item;
+                    showDialog = "New Location".equals(selectedLocation.getNickname());
+                } else {
+                    showDialog = "New Location".equals(item.toString());
+                }
+
+                if (showDialog) {
                     newLocation_dialog dialog = new newLocation_dialog();
-                    dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locationsList, locationsSpinner);
+                    dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locations, locationsSpinner);
 
                 }
             }
@@ -102,6 +155,10 @@ public class NewReminderActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
+
+
+
+
 
 
         CheckBox locationCheck = findViewById(R.id.LocationCheck);
@@ -144,14 +201,28 @@ public class NewReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("NewReminder", "Submit button clicked");
-                submitButton.setEnabled(false);
-                submittedReminder();
+
+                if (isDateSet && isTimeSet) {
+                    submitButton.setEnabled(false);
+                    submittedReminder();
+                } else {
+                    Toast.makeText(NewReminderActivity.this, "Please select a date and time", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
 
-        submitButton.setEnabled(false);
+
     }
+
+    private void updateSpinner(Spinner spinner) {
+        LocationAdapter adapter = new LocationAdapter(this, locations);
+        spinner.setAdapter(adapter);
+    }
+
+
+
 
     private void showTimePickerDialog() {
         TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -214,7 +285,7 @@ public class NewReminderActivity extends AppCompatActivity {
         description = Description.getText().toString();
 
         Spinner location_spinner = (Spinner) findViewById(R.id.LocationSpinner);
-        String location = location_spinner.getSelectedItem().toString();
+        Location selectedLocation = locations.get(location_spinner.getSelectedItemPosition()); // Get the selected Location object
 
 
         LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
@@ -255,6 +326,13 @@ public class NewReminderActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (com.google.android.libraries.places.api.Places.isInitialized()) {
+            com.google.android.libraries.places.api.Places.deinitialize();
+        }
+    }
 }
 
 

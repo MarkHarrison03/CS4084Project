@@ -6,7 +6,7 @@ public class Location {
     private double latitude;
     private double longitude;
     private int accuracyRadius; //determines the accuracy of the reminder by setting a radius around the location
-
+    private String placeName;
 
     public Location() {
     }
@@ -17,6 +17,12 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
         this.accuracyRadius = accuracyRadius;
+    }
+
+
+
+    public String getPlaceName() {
+        return this.placeName;
     }
 
     // Getters and setters
@@ -63,13 +69,10 @@ public class Location {
     // toString method to display the Location information
     @Override
     public String toString() {
-        return "Location{" +
-                "nickname='" + nickname + '\'' +
-                ", address='" + address + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
+        return nickname;
+
     }
+
 }
 
 
