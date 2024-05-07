@@ -1,5 +1,6 @@
 package com.example.reminderapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -7,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.activity.result.ActivityResultCallback;
+
 import android.location.Address;
 
 import android.Manifest;
@@ -33,10 +35,6 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 
-
-
-
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -57,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isCoarseLocationPermissionGranted = false;
     private boolean isNotificationPermissionGranted = false;
     private ActivityResultLauncher<String[]> mPermissionResultLauncher;
-    FusedLocationProviderClient fusedLocationProviderClient;
     private double lastKnownLatitude;
     private double lastKnownLongitude;
 
@@ -81,11 +78,6 @@ public class MainActivity extends AppCompatActivity {
         Button mapButton = findViewById(R.id.map);
         ImageButton profileButton = findViewById(R.id.profileButton);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-
-        getLastLocation();
-
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(profileIntent);
             }
         });
-
 
 
         newRemindButton.setOnClickListener(new View.OnClickListener() {
@@ -117,14 +108,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View mapview) {
-                Intent newMap = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(newMap);
-            }
-        });
-
         String apiKey = BuildConfig.MAPS_API_KEY;
 
         // Log an error if apiKey is not set.
@@ -141,13 +124,6 @@ public class MainActivity extends AppCompatActivity {
         placesClient = Places.createClient(this);
 
 
-
-
-
-
-
-
-
     }
 
     @Override
@@ -157,9 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void requestPermissions() {
         mPermissionResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
             @Override
@@ -197,43 +171,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getLastLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                lastKnownLatitude = location.getLatitude();
-                                lastKnownLongitude = location.getLongitude();
-                                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                                try {
-                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    if (!addresses.isEmpty()) {
-                                        Address address = addresses.get(0);
-                                        Log.d("MainActivity", "Last Known Location: " + address.getLocality() + ", " + address.getCountryName());
-                                        Log.d("MainActivity", "Last Known Location: Latitude=" + lastKnownLatitude + ", Longitude=" + lastKnownLongitude);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
-        }}
-
-
-    private void createNotificationChannel() {
-
-        CharSequence name = "My Notification Channel";
-        String description = "Channel Description";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel("my_channel_id", name, importance);
-        channel.setDescription(description);
-        // Register the channel with the system
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
-    }
 
     //creates reminder based on reminder object details
     private void createNotification(Reminder reminder) {
@@ -249,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         System.out.println("hi!3");
         // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(1, builder.build());
         System.out.println("hi!4");
 
     }
