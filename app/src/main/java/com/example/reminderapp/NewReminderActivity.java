@@ -281,7 +281,7 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
 
-           newReminder  = new Reminder(description, label, newReminderTime, selectedLocation);
+            newReminder  = new Reminder(description, label, newReminderTime, selectedLocation);
         }else {
 
             newReminder = new Reminder(description, label, newReminderTime);
@@ -328,6 +328,3 @@ public class NewReminderActivity extends AppCompatActivity {
         }
     }
 }
-
-
-

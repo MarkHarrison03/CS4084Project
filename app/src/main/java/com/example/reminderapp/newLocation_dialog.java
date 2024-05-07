@@ -37,7 +37,7 @@ public class newLocation_dialog {
     private Location tempLocation;
     private String locationNickname;
     private static String selectedLocationData;
-    int accuracyRadius = 0;
+    int accuracyRadius = 10;
     private Context context;
     private List<Location> locations = new ArrayList<>(); // Add this line
     private FragmentActivity fragmentActivity;
@@ -133,8 +133,6 @@ public class newLocation_dialog {
                     double latitude = latLng.latitude;
                     double longitude = latLng.longitude;
                     String userEmail = Singleton.getInstance().getUserEmail();
-                    Location location = new Location(locationNickname, place.getAddress(), latitude, longitude, accuracyRadius, userEmail);
-                    Singleton.getInstance().addLocation(location);
 
                     adapter.notifyDataSetChanged();
                     tempLocation = new Location("", place.getAddress(), latitude, longitude, accuracyRadius, userEmail);

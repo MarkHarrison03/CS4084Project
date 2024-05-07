@@ -15,9 +15,8 @@ public class Reminder {
     private String title;
     private LocalDateTime dateInput;
     private String email;
-
     private Location location;
-
+    private boolean isSent = false;
 
 
     public Reminder(String description, String title, LocalDateTime dateInput) {
@@ -76,7 +75,13 @@ public class Reminder {
         this.title = title;
     }
 
+    public void setIsSent(boolean isSent){
+        this.isSent = isSent;
+    }
 
+    public boolean getIsSent(){
+        return isSent;
+    }
 
     public String toString() {
         String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n" + "location: " + location.toString() + "\n" ;
