@@ -27,9 +27,10 @@ public class Utils {
         String description = "";
         String title = "";
         String email = "";
+        Location location = null;
         LocalDateTime datetime = null;
-
         for (int i = 0; i < splitString.length; i++) {
+
 
             if(splitString[i].equals("description")){
                 description = splitString[i+1];
@@ -44,9 +45,17 @@ public class Utils {
                 email = splitString[i+1];
             }
 
+            if(splitString[i].equals(" location")){
+                location = new Location(splitString[i+6], "", Double.parseDouble(splitString[i+5]), Double.parseDouble(splitString[i+9]), Integer.parseInt(splitString[i+3]), Singleton.getInstance().getUserEmail());
+            }
+
         }
-        Log.d("DATETIME", datetime.toString());
-        Reminder newReminder = new Reminder(description, title, datetime);
+        Reminder newReminder;
+        if(location != null) {
+             newReminder = new Reminder(description, title, datetime,location);
+        }else{
+             newReminder = new Reminder(description, title, datetime);
+        }
         return newReminder;
     }
 }

@@ -71,7 +71,8 @@ public class Location {
     // toString method to display the Location information
     @Override
     public String toString() {
-        return nickname;
+        String s = "nickname " + nickname + "\nlat: " + latitude + "\nlong: " + longitude + "\nradius: " + accuracyRadius;
+        return s;
 
     }
 
