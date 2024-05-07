@@ -75,10 +75,7 @@ public class NewReminderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_reminder);
 
-        submitButton = findViewById(R.id.SubmitButton); // Initialization
-
-        Log.d("NewReminder", "this mf making a reminder");
-
+        submitButton = findViewById(R.id.SubmitButton);
 
         Spinner locationsSpinner = (Spinner) findViewById(R.id.LocationSpinner);
         locationsSpinner.setVisibility(View.GONE);
