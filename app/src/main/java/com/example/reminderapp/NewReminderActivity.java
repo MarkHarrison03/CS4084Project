@@ -33,6 +33,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+
+
 public class NewReminderActivity extends AppCompatActivity {
 
     String label;
@@ -43,6 +45,7 @@ public class NewReminderActivity extends AppCompatActivity {
     int month;
     int dayOfMonth;
     boolean isLocation = false;
+
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String email = Singleton.getInstance().getUserEmail();

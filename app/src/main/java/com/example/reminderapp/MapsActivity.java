@@ -16,6 +16,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private LatLng userSelectedLatLng;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +45,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Selected Location"));
+                userSelectedLatLng = latLng;
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+                System.out.println(userSelectedLatLng);
+                // You can also perform any other operations here, such as saving to a database
+                // or displaying a message to the user.
+                //Toast.makeText(MapsActivity.this, "Location saved: " + latLng.toString(), Toast.LENGTH_SHORT).show();
+            }
+
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+       // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            // mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+     });
     }
 }
