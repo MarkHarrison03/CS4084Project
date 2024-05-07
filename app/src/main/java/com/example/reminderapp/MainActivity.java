@@ -48,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Intent serviceIntent = new Intent(this, NotificationScheduleService.class);
+        startService(serviceIntent);
+        Intent serviceIntent1 = new Intent(this, NotificationSendingService.class);
+        startService(serviceIntent1);
+
         Log.d("MainActivity", "Hello World");
 
         super.onCreate(savedInstanceState);
@@ -87,15 +93,18 @@ public class MainActivity extends AppCompatActivity {
         myRemindersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Log.d("MainActivity", "View Reminder Button clicked");
-                Intent viewRemind = new Intent(MainActivity.this, ViewReminderActivity.class);
-                startActivity(viewRemind);
+
+                Intent myReminders = new Intent(MainActivity.this, UserReminders.class);
+                startActivity(myReminders);
+
             }
         });
 
-        mapButton.setOnClickListener(new View.OnClickListener(){
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View mapview){
+            public void onClick(View mapview) {
                 Intent newMap = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(newMap);
             }
@@ -103,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         requestPermissions();
     }
+
 
 
 
@@ -168,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     });
         }}}
     /*
+
     private void createNotificationChannel() {
         CharSequence name = "My Notification Channel";
         String description = "Channel Description";
@@ -195,4 +206,9 @@ public class MainActivity extends AppCompatActivity {
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(1, builder.build());
         System.out.println("hi!4");
-    }*/
+
+    }
+
+
+}
+

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class LocationReminder extends Reminder {
     Location location;
 
-    public LocationReminder(String description, String title, LocalDateTime dateInput, String userID, Location location) {
-        super(description, title, dateInput, userID);
+    public LocationReminder(String description, String title, LocalDateTime dateInput, Location location) {
+        super(description, title, dateInput);
         this.location = location;
     }
 

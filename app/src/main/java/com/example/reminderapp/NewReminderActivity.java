@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -60,10 +59,6 @@ public class NewReminderActivity extends AppCompatActivity {
         Log.d("NewReminder", "this mf making a reminder");
 
 
-
-
-
-
         List<String> locations_array = Arrays.asList("home", "school", "work");
         FirebaseApp.initializeApp(this);
         Spinner locations = (Spinner) findViewById(R.id.LocationSpinner);
@@ -95,14 +90,13 @@ public class NewReminderActivity extends AppCompatActivity {
         });
 
 
-        locationCheck.setOnClickListener(new View.OnClickListener(){
+        locationCheck.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                if(((CheckBox)view).isChecked()){
+            public void onClick(View view) {
+                if (((CheckBox) view).isChecked()) {
                     locations.setVisibility(View.VISIBLE);
                     isLocation = true;
-                }
-                else{
+                } else {
                     locations.setVisibility(View.GONE);
                     isLocation = false;
                 }
@@ -148,11 +142,16 @@ public class NewReminderActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDayOfMonth) {
                 year = selectedYear;
-                month = selectedMonth;
+                month = selectedMonth + 1;
                 dayOfMonth = selectedDayOfMonth;
+                Log.d("Monthcheck", String.valueOf(month));
+
+                for (Reminder r : Singleton.getInstance().getUserReminders()) {
+                    Log.d("TODAYREMINDER", r.toString());
+                }
                 // Set the date on the dateButton
                 Button dateButton = findViewById(R.id.DateButton);
-                dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month + 1, year));
+                dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month, year));
             }
         };
 
@@ -160,13 +159,13 @@ public class NewReminderActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void submittedReminder(){
+    private void submittedReminder() {
 
 
-        EditText Label = (EditText)findViewById(R.id.LabelText);
+        EditText Label = (EditText) findViewById(R.id.LabelText);
         label = Label.getText().toString();
 
-        EditText Description = (EditText)findViewById(R.id.DescriptionText);
+        EditText Description = (EditText) findViewById(R.id.DescriptionText);
         description = Description.getText().toString();
 
         Spinner location_spinner = (Spinner) findViewById(R.id.LocationSpinner);
@@ -176,16 +175,13 @@ public class NewReminderActivity extends AppCompatActivity {
         LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
 
-
-
-
-        Reminder newReminder = new Reminder(description, label, newReminderTime, email);
-        System.out.println(newReminder.getEmail());
+        Reminder newReminder = new Reminder(description, label, newReminderTime);
+        Log.d("year", String.valueOf(newReminder.getDateInput().getMonth()));
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference remindersRef = database.getReference("reminders");
-        Log.d("AUTH",Singleton.getInstance().getUserEmail());
+        Log.d("AUTH", Singleton.getInstance().getUserEmail());
         System.out.println(Singleton.getInstance().getUserEmail());
         // Push the new reminder object to the database
         DatabaseReference newReminderRef = remindersRef.push();
@@ -206,14 +202,9 @@ public class NewReminderActivity extends AppCompatActivity {
                 });
 
 
-
-
-
-
-
     }
 
-    }
+}
 
 
 
