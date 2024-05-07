@@ -149,10 +149,6 @@ public class NewReminderActivity extends AppCompatActivity {
                     isLocation = true;
                     newLocation_dialog dialog_newLocation = new newLocation_dialog();
                     dialog_newLocation.showDialog(NewReminderActivity.this, NewReminderActivity.this, locations);
-
-
-
-
                 } else {
                     isLocation = false;
                 }
@@ -250,9 +246,6 @@ public class NewReminderActivity extends AppCompatActivity {
 
         if(locationCheck.isChecked()) {
             Location selectedLocation = Singleton.getInstance().getTempLocation();
-
-
-
             newReminder  = new Reminder(description, label, newReminderTime, selectedLocation);
         }else {
 
