@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        String apiKey = BuildConfig.API_KEY;
+        String apiKey = BuildConfig.MAPS_API_KEY;
 
         // Log an error if apiKey is not set.
         if (TextUtils.isEmpty(apiKey)) {
