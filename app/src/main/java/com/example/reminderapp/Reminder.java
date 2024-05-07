@@ -3,9 +3,12 @@ package com.example.reminderapp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.lang.reflect.Array;
-import java.time.*;
-import java.util.ArrayList;
+
+    import java.lang.reflect.Array;
+    import java.time.*;
+    import java.time.format.DateTimeFormatter;
+    import java.util.ArrayList;
+
 
 public class Reminder {
     private String description;
@@ -14,6 +17,7 @@ public class Reminder {
     private String email;
 
     private Location location;
+
 
 
     public Reminder(String description, String title, LocalDateTime dateInput) {
@@ -93,6 +97,8 @@ public class Reminder {
             if (!(rem.getDateInput().toLocalDate().equals(currentDate))) {
                 user.removeTodayReminder(rem);
             }
+
+
         }
     }
 
