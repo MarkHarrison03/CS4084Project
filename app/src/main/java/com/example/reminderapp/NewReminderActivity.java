@@ -263,6 +263,8 @@ public class NewReminderActivity extends AppCompatActivity {
 
     private void submittedReminder() {
 
+        CheckBox locationCheck = findViewById(R.id.LocationCheck);
+
 
         EditText Label = (EditText) findViewById(R.id.LabelText);
         label = Label.getText().toString();
@@ -270,15 +272,24 @@ public class NewReminderActivity extends AppCompatActivity {
         EditText Description = (EditText) findViewById(R.id.DescriptionText);
         description = Description.getText().toString();
 
-        Spinner location_spinner = (Spinner) findViewById(R.id.LocationSpinner);
-        Location selectedLocation = locations.get(location_spinner.getSelectedItemPosition()); // Get the selected Location object
-
-
+        Reminder newReminder;
         LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
 
-        Reminder newReminder = new Reminder(description, label, newReminderTime);
-        Log.d("year", String.valueOf(newReminder.getDateInput().getMonth()));
+        if(locationCheck.isChecked()) {
+
+
+            Spinner location_spinner = (Spinner) findViewById(R.id.LocationSpinner);
+            Location selectedLocation = locations.get(location_spinner.getSelectedItemPosition());
+
+
+
+           newReminder  = new Reminder(description, label, newReminderTime, selectedLocation);
+        }else {
+
+            newReminder = new Reminder(description, label, newReminderTime);
+        }
+
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");

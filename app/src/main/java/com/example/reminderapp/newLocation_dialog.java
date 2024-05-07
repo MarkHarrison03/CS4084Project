@@ -74,6 +74,7 @@ public class newLocation_dialog {
                         String userId = Singleton.getInstance().getCurrentUserId();
                         DatabaseReference userLocationsRef = locationsRef.child(userId);
                         String userEmail = Singleton.getInstance().getUserEmail();
+
                         userLocationsRef.push().setValue(tempLocation)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
