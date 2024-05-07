@@ -1,48 +1,48 @@
 package com.example.reminderapp;
 
-        import static android.content.ContentValues.TAG;
+import static android.content.ContentValues.TAG;
 
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.widget.ArrayAdapter;
-        import android.widget.EditText;
-        import android.widget.SeekBar;
-        import android.widget.Spinner;
-        import android.widget.TextView;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-        import androidx.annotation.NonNull;
-        import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
-        import com.google.android.gms.common.api.Status;
-        import com.google.android.gms.maps.model.LatLng;
-        import com.google.android.gms.tasks.OnFailureListener;
-        import com.google.android.gms.tasks.OnSuccessListener;
-        import com.google.android.libraries.places.api.model.Place;
-        import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-        import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-        import com.google.firebase.database.DatabaseReference;
-        import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.Collections;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class newLocation_dialog {
     private Location tempLocation;
     private String locationNickname;
     private static String selectedLocationData;
-    int accuracyRadius = 0;
+    int accuracyRadius = 10;
     private Context context;
     private List<Location> locations = new ArrayList<>(); // Add this line
     private FragmentActivity fragmentActivity;
 
-    public void showDialog(Activity activity,FragmentActivity fragmentActivity, List<Location> locations, Spinner locationsSpinner) {
+    public void showDialog(Activity activity, FragmentActivity fragmentActivity, List<Location> locations, Spinner locationsSpinner) {
 
         this.context = activity;
         this.fragmentActivity = fragmentActivity;
@@ -57,7 +57,7 @@ public class newLocation_dialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.newlocation_dialog, null);
         builder.setView(dialogView);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         EditText locationNicknameEditText = dialogView.findViewById(R.id.location_nickname);
@@ -74,6 +74,8 @@ public class newLocation_dialog {
                         String userId = Singleton.getInstance().getCurrentUserId();
 
                         DatabaseReference userLocationsRef = locationsRef.child(userId);
+                        String userEmail = Singleton.getInstance().getUserEmail();
+
                         userLocationsRef.push().setValue(tempLocation)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -81,8 +83,6 @@ public class newLocation_dialog {
                                         Log.d("NewLocation", "Firebase push success");
                                         locations.add(tempLocation);
                                         adapter.notifyDataSetChanged();
-
-
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -91,11 +91,6 @@ public class newLocation_dialog {
                                         Log.d("NewLocation", "Firebase push failed");
                                     }
                                 });
-
-
-
-
-
 
 
                     }
@@ -118,10 +113,12 @@ public class newLocation_dialog {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
 
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
@@ -136,16 +133,10 @@ public class newLocation_dialog {
                 if (latLng != null) {
                     double latitude = latLng.latitude;
                     double longitude = latLng.longitude;
-
-                    Location location = new Location(locationNickname, place.getAddress(), latitude, longitude, accuracyRadius);
-                    Singleton.getInstance().addLocation(location);
+                    String userEmail = Singleton.getInstance().getUserEmail();
 
                     adapter.notifyDataSetChanged();
-
-                    tempLocation = new Location("", place.getAddress(), latitude, longitude, accuracyRadius); // Change this line
-
-
-
+                    tempLocation = new Location("", place.getAddress(), latitude, longitude, accuracyRadius, userEmail);
 
                     selectedLocationData = place.getName() + " (" + place.getAddress() + ")";
                 } else {
@@ -170,8 +161,6 @@ public class newLocation_dialog {
         });
         dialog.show();
     }
-
-
 
 
 }

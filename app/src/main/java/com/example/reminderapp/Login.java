@@ -83,28 +83,6 @@ public class Login extends AppCompatActivity {
                                     String uid = mAuth.getCurrentUser().getUid();
                                     Singleton.getInstance().setCurrentUserId(uid);
 
-
-                                    FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
-                                    DatabaseReference locationsRef = database.getReference("locations");
-                                    String userId = Singleton.getInstance().getCurrentUserId();
-                                    DatabaseReference userLocationsRef = locationsRef.child(userId);
-                                    userLocationsRef.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            Singleton.getInstance().getCurrentUserLocationsForReminders().clear();
-                                            for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
-                                                Location location = locationSnapshot.getValue(Location.class);
-                                                Singleton.getInstance().addLocation(location);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                            Log.w(TAG, "loadLocations:onCancelled", databaseError.toException());
-                                        }
-                                    });
-
-
                                     finish();
 
 
