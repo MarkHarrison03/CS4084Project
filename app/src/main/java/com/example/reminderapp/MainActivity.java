@@ -23,6 +23,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.text.TextUtils;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
+
+
+
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -31,12 +43,15 @@ import com.google.firebase.FirebaseApp;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    private PlacesClient placesClient;
 
     private boolean isFineLocationPermissionGranted = false;
     private boolean isCoarseLocationPermissionGranted = false;
@@ -110,8 +125,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        String apiKey = BuildConfig.MAPS_API_KEY;
+
+        // Log an error if apiKey is not set.
+        if (TextUtils.isEmpty(apiKey)) {
+            Log.e("Places test", "No api key");
+            finish();
+            return;
+        }
+
+        // Initialize the SDK
+        Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey);
+
+        // Create a new PlacesClient instance
+        placesClient = Places.createClient(this);
+
+
+
+
+
+
+
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         requestPermissions();
     }
+
 
 
 
@@ -176,10 +220,11 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-        }}}
-    /*
+        }}
+
 
     private void createNotificationChannel() {
+
         CharSequence name = "My Notification Channel";
         String description = "Channel Description";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -194,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
     private void createNotification(Reminder reminder) {
         System.out.println("hi!");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
-                // replace ic_notification with your own icon
+
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(reminder.getTitle() + reminder.getDateInput())
                 .setContentText(reminder.getDescription())

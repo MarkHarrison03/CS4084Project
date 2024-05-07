@@ -1,16 +1,23 @@
 package com.example.reminderapp;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class Singleton {
     private  String currentUserEmail;
+    private String currentUserId;
+
     private static Singleton instance;
 
     private ArrayList<Reminder> currentUserReminders;
-
+    private ArrayList<Location> currentUserLocationsForReminders;
     private Singleton() {
         this.currentUserEmail = null;
         currentUserReminders = new ArrayList<>();
+        currentUserLocationsForReminders = new ArrayList<>();
+
     }
 
     public static Singleton getInstance() {
@@ -19,7 +26,12 @@ public class Singleton {
         }
         return instance;
     }
-
+    public void setCurrentUserId(String currentUserId){
+        this.currentUserId = currentUserId;
+    }
+    public String getCurrentUserId() {
+        return currentUserId;
+    }
     public void setCurrentUserEmail(String currentUserEmail){
         this.currentUserEmail = currentUserEmail;
     }
@@ -33,4 +45,14 @@ public class Singleton {
     public ArrayList<Reminder> getUserReminders() {
         return currentUserReminders;
     }
+
+    public void addLocation(Location location){
+        currentUserLocationsForReminders.add(location);
+    }
+
+    public ArrayList<Location> getCurrentUserLocationsForReminders() {
+        return currentUserLocationsForReminders;
+    }
+
+
 }

@@ -16,6 +16,8 @@ public class Reminder {
     private LocalDateTime dateInput;
     private String email;
 
+    private Location location;
+
 
 
     public Reminder(String description, String title, LocalDateTime dateInput) {
@@ -23,8 +25,17 @@ public class Reminder {
         this.dateInput = dateInput;
         this.title = title;
         this.email = Singleton.getInstance().getUserEmail();
+        this.location = null;
+
     }
 
+    public Reminder(String description, String title, LocalDateTime dateInput, Location location) {
+        this.description = description;
+        this.dateInput = dateInput;
+        this.title = title;
+        this.email = Singleton.getInstance().getUserEmail();
+        this.location = location;
+    }
     public Reminder() {
         this.description = "no input";
         this.title = "no input";
@@ -46,6 +57,10 @@ public class Reminder {
 
     public String getEmail() {
         return email;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
 

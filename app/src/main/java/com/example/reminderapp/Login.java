@@ -1,5 +1,7 @@
 package com.example.reminderapp;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +20,11 @@ import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
@@ -73,6 +80,31 @@ public class Login extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(intent);
+                                    String uid = mAuth.getCurrentUser().getUid();
+                                    Singleton.getInstance().setCurrentUserId(uid);
+
+
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
+                                    DatabaseReference locationsRef = database.getReference("locations");
+                                    String userId = Singleton.getInstance().getCurrentUserId();
+                                    DatabaseReference userLocationsRef = locationsRef.child(userId);
+                                    userLocationsRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            Singleton.getInstance().getCurrentUserLocationsForReminders().clear();
+                                            for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                                                Location location = locationSnapshot.getValue(Location.class);
+                                                Singleton.getInstance().addLocation(location);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.w(TAG, "loadLocations:onCancelled", databaseError.toException());
+                                        }
+                                    });
+
+
                                     finish();
 
 
