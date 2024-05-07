@@ -72,6 +72,7 @@ public class newLocation_dialog {
                         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
                         DatabaseReference locationsRef = database.getReference("locations");
                         String userId = Singleton.getInstance().getCurrentUserId();
+
                         DatabaseReference userLocationsRef = locationsRef.child(userId);
                         userLocationsRef.push().setValue(tempLocation)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
