@@ -80,8 +80,7 @@ public class NewReminderActivity extends AppCompatActivity {
         Log.d("NewReminder", "this mf making a reminder");
 
 
-        Spinner locationsSpinner = (Spinner) findViewById(R.id.LocationSpinner);
-        locationsSpinner.setVisibility(View.GONE);
+
 
 
         Location savedLocations = new Location();
@@ -94,8 +93,6 @@ public class NewReminderActivity extends AppCompatActivity {
 
         LocationAdapter adapter = new LocationAdapter(this, locations);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        locationsSpinner.setAdapter(adapter);
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -112,8 +109,6 @@ public class NewReminderActivity extends AppCompatActivity {
                     }
                 }
 
-                // Update the spinner with the retrieved locations
-                updateSpinner(locationsSpinner);
             }
 
             @Override
@@ -123,30 +118,6 @@ public class NewReminderActivity extends AppCompatActivity {
         });
 
 
-        locationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Object item = parent.getItemAtPosition(position);
-                boolean showDialog = false;
-                if (item instanceof Location) {
-                    Location selectedLocation = (Location) item;
-                    showDialog = "New Location".equals(selectedLocation.getNickname());
-                } else {
-                    showDialog = "New Location".equals(item.toString());
-                }
-
-                if (showDialog) {
-                    newLocation_dialog dialog = new newLocation_dialog();
-                    dialog.showDialog(NewReminderActivity.this, NewReminderActivity.this, locations, locationsSpinner);
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
 
 
         CheckBox locationCheck = findViewById(R.id.LocationCheck);
@@ -175,10 +146,14 @@ public class NewReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (((CheckBox) view).isChecked()) {
-                    locationsSpinner.setVisibility(View.VISIBLE);
                     isLocation = true;
+                    newLocation_dialog dialog_newLocation = new newLocation_dialog();
+                    dialog_newLocation.showDialog(NewReminderActivity.this, NewReminderActivity.this, locations);
+
+
+
+
                 } else {
-                    locationsSpinner.setVisibility(View.GONE);
                     isLocation = false;
                 }
             }
@@ -204,10 +179,7 @@ public class NewReminderActivity extends AppCompatActivity {
 
     }
 
-    private void updateSpinner(Spinner spinner) {
-        LocationAdapter adapter = new LocationAdapter(this, locations);
-        spinner.setAdapter(adapter);
-    }
+
 
 
     private void showTimePickerDialog() {
@@ -277,10 +249,7 @@ public class NewReminderActivity extends AppCompatActivity {
 
 
         if(locationCheck.isChecked()) {
-
-
-            Spinner location_spinner = (Spinner) findViewById(R.id.LocationSpinner);
-            Location selectedLocation = locations.get(location_spinner.getSelectedItemPosition());
+            Location selectedLocation = Singleton.getInstance().getTempLocation();
 
 
 
