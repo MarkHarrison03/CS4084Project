@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class NotificationSendingService extends Service {
 
     @Override
     public void onCreate() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         System.out.println("Oncreatestarted");
         super.onCreate();
         handler = new Handler(Looper.getMainLooper());
