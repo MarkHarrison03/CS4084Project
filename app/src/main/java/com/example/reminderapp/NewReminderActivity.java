@@ -70,7 +70,6 @@ public class NewReminderActivity extends AppCompatActivity {
     List<Location> locations = new ArrayList<>();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +78,6 @@ public class NewReminderActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.SubmitButton); // Initialization
 
         Log.d("NewReminder", "this mf making a reminder");
-
 
 
         Spinner locationsSpinner = (Spinner) findViewById(R.id.LocationSpinner);
@@ -98,8 +96,6 @@ public class NewReminderActivity extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationsSpinner.setAdapter(adapter);
-
-
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -127,10 +123,6 @@ public class NewReminderActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         locationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -155,10 +147,6 @@ public class NewReminderActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
-
-
-
-
 
 
         CheckBox locationCheck = findViewById(R.id.LocationCheck);
@@ -220,8 +208,6 @@ public class NewReminderActivity extends AppCompatActivity {
         LocationAdapter adapter = new LocationAdapter(this, locations);
         spinner.setAdapter(adapter);
     }
-
-
 
 
     private void showTimePickerDialog() {

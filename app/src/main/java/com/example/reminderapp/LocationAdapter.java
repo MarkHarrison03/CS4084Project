@@ -47,7 +47,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
                 } else if (address != null && !address.isEmpty()) {
                     txtTitle.setText(address);
                 } else {
-                    txtTitle.setText(""); // or some default text
+                    txtTitle.setText("");
                 }
             }
         }
