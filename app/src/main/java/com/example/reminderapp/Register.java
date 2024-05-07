@@ -89,34 +89,7 @@ public class Register extends AppCompatActivity {
                                 }
                             }
                         });
-
-                        /* mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Singleton currentUser = Singleton.getInstance();
-                                    currentUser.setCurrentUserEmail(email);
-                                    Toast.makeText(Login.this, "Authentication success.",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    String uid = mAuth.getCurrentUser().getUid();
-                                    Singleton.getInstance().setCurrentUserId(uid);
-
-                                    finish();
-
-
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(Login.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }); */
-
-
-
+                
             }
         });
     }
