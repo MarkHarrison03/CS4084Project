@@ -39,6 +39,7 @@ public class Reminder {
         String email = Singleton.getInstance().getUserEmail();
     }
 
+
     public LocalDateTime getDateInput() {
         return dateInput;
     }

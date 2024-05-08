@@ -61,6 +61,9 @@
             android:name=".NewReminderActivity"
             android:exported="false" />
         <activity
+            android:name=".ViewReminderActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
 
             android:exported="true" >
