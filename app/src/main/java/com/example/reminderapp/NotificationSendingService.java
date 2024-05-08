@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,7 +23,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class NotificationSendingService extends Service {
     private Handler handler;
@@ -35,7 +33,6 @@ public class NotificationSendingService extends Service {
     @Override
     public void onCreate() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-        System.out.println("Oncreatestarted");
         super.onCreate();
         handler = new Handler(Looper.getMainLooper());
         scheduleTask();
@@ -45,8 +42,6 @@ public class NotificationSendingService extends Service {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                //Parse reminders and send notification
-                System.out.println("Started");
                 ArrayList<Reminder> userReminders = Singleton.getInstance().getUserReminders();
                 getLastLocation();
                 for (Reminder reminder : userReminders) {
@@ -60,19 +55,17 @@ public class NotificationSendingService extends Service {
                 }
                 handler.postDelayed(this, INTERVAL);
             }
-        }, INTERVAL); // Initially start after INTERVAL
+        }, INTERVAL);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Stop the handler when the service is destroyed
         handler.removeCallbacksAndMessages(null);
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // This service doesn't support binding
         return null;
     }
     private void createNotificationChannel() {
@@ -82,30 +75,24 @@ public class NotificationSendingService extends Service {
         int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel channel = new NotificationChannel("my_channel_id", name, importance);
         channel.setDescription(description);
-        // Register the channel with the system
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
     }
 
     private void createNotification(Reminder reminder) {
         createNotificationChannel();
-        System.out.println("hi!");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
 
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(reminder.getTitle())
                 .setContentText(reminder.getDescription())
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        System.out.println("hi!2");
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        System.out.println("hi!3");
-        // notificationId is a unique int for each notification that you must define
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         notificationManager.notify(1, builder.build());
-        System.out.println("hi!4");
     }
 
     private void getLastLocation() {
@@ -126,10 +113,15 @@ public class NotificationSendingService extends Service {
     private boolean radiusCheck(com.example.reminderapp.Location L) {
         float[] results = new float[1];
         double latitude = Singleton.getInstance().getCurrentLatitude();
+        System.out.println("system lat" + latitude);
         double longitude = Singleton.getInstance().getCurrentLongitude();
+        System.out.println("system longt" + longitude);
+
+        System.out.println("Reminder lat long =  " + L.getLatitude()  +" " + L.getLongitude());
         Location.distanceBetween(L.getLatitude(), L.getLongitude(), latitude, longitude, results);
         float distanceInMeters = results[0];
-
+        System.out.println("distance " + distanceInMeters);
+        System.out.println(L.getAccuracyRadius());
         return distanceInMeters < L.getAccuracyRadius();
     }
 
@@ -138,14 +130,13 @@ public class NotificationSendingService extends Service {
             return false;
         } else {
             if (reminder.getLocation() != null) {
-                System.out.println("LOCATION!");
                 boolean atLocation = radiusCheck(reminder.getLocation());
+                System.out.println(atLocation);
                 LocalDateTime now = LocalDateTime.now();
                 boolean time = reminder.getDateInput().getHour() == now.getHour() &&
                         reminder.getDateInput().getMinute() == now.getMinute();
                 return (atLocation && time);
             } else {
-                System.out.println("time based");
                 LocalDateTime now = LocalDateTime.now();
                 return reminder.getDateInput().getHour() == now.getHour() &&
                         reminder.getDateInput().getMinute() == now.getMinute();

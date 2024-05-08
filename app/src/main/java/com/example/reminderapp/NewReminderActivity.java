@@ -78,8 +78,6 @@ public class NewReminderActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.SubmitButton);
 
 
-
-
         Location savedLocations = new Location();
         savedLocations.setNickname("Saved Locations");
         locations.add(savedLocations);
@@ -88,91 +86,49 @@ public class NewReminderActivity extends AppCompatActivity {
         newLocation.setNickname("New Location");
         locations.add(newLocation);
 
-        LocationAdapter adapter = new LocationAdapter(this, locations);
-
-
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference locationsRef = database.getReference("locations");
-        String userId = Singleton.getInstance().getCurrentUserId();
-        DatabaseReference userLocationsRef = locationsRef.child(userId);
-        userLocationsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
-                    Location location = locationSnapshot.getValue(Location.class);
-                    if (location != null) {
-                        locations.add(location);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("NewReminderActivity", "Firebase read failed");
-            }
-        });
-
-
-
 
         CheckBox locationCheck = findViewById(R.id.LocationCheck);
         Button timeButton = findViewById(R.id.TimeButton);
-        timeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("NewReminder", "Time button clicked");
+        timeButton.setOnClickListener(view -> {
+            Log.d("NewReminder", "Time button clicked");
 
-                showTimePickerDialog();
-            }
+            showTimePickerDialog();
         });
 
         Button dateButton = findViewById(R.id.DateButton);
-        dateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("NewReminder", "Date button clicked");
+        dateButton.setOnClickListener(view -> {
+            Log.d("NewReminder", "Date button clicked");
 
-                showDatePickerDialog();
+            showDatePickerDialog();
+        });
+
+
+        locationCheck.setOnClickListener(view -> {
+            if (((CheckBox) view).isChecked()) {
+                isLocation = true;
+                newLocation_dialog dialog_newLocation = new newLocation_dialog();
+                dialog_newLocation.showDialog(NewReminderActivity.this, NewReminderActivity.this);
+            } else {
+                isLocation = false;
             }
         });
 
 
-        locationCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (((CheckBox) view).isChecked()) {
-                    isLocation = true;
-                    newLocation_dialog dialog_newLocation = new newLocation_dialog();
-                    dialog_newLocation.showDialog(NewReminderActivity.this, NewReminderActivity.this, locations);
-                } else {
-                    isLocation = false;
-                }
+        submitButton.setOnClickListener(view -> {
+            Log.d("NewReminder", "Submit button clicked");
+
+            if (isDateSet && isTimeSet) {
+                submitButton.setEnabled(false);
+                submittedReminder();
+            } else {
+                Toast.makeText(NewReminderActivity.this, "Please select a date and time", Toast.LENGTH_SHORT).show();
             }
-        });
 
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("NewReminder", "Submit button clicked");
-
-                if (isDateSet && isTimeSet) {
-                    submitButton.setEnabled(false);
-                    submittedReminder();
-                } else {
-                    Toast.makeText(NewReminderActivity.this, "Please select a date and time", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
         });
 
 
     }
-
-
 
 
     private void showTimePickerDialog() {
@@ -201,24 +157,16 @@ public class NewReminderActivity extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDayOfMonth) {
-                year = selectedYear;
-                month = selectedMonth + 1;
-                dayOfMonth = selectedDayOfMonth;
-                Log.d("Monthcheck", String.valueOf(month));
+        DatePickerDialog.OnDateSetListener onDateSetListener = (datePicker, selectedYear, selectedMonth, selectedDayOfMonth) -> {
+            year = selectedYear;
+            month = selectedMonth + 1;
+            dayOfMonth = selectedDayOfMonth;
 
-                for (Reminder r : Singleton.getInstance().getUserReminders()) {
-                    Log.d("TODAYREMINDER", r.toString());
-                }
-                // Set the date on the dateButton
-                Button dateButton = findViewById(R.id.DateButton);
-                dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month, year));
-                isDateSet = true;
-                if (isTimeSet) {
-                    submitButton.setEnabled(true);
-                }
+            Button dateButton = findViewById(R.id.DateButton);
+            dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month, year));
+            isDateSet = true;
+            if (isTimeSet) {
+                submitButton.setEnabled(true);
             }
         };
 
@@ -231,24 +179,22 @@ public class NewReminderActivity extends AppCompatActivity {
         CheckBox locationCheck = findViewById(R.id.LocationCheck);
 
 
-        EditText Label = (EditText) findViewById(R.id.LabelText);
+        EditText Label = findViewById(R.id.LabelText);
         label = Label.getText().toString();
 
-        EditText Description = (EditText) findViewById(R.id.DescriptionText);
+        EditText Description = findViewById(R.id.DescriptionText);
         description = Description.getText().toString();
 
         Reminder newReminder;
         LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
 
-        if(locationCheck.isChecked()) {
+        if (locationCheck.isChecked()) {
             Location selectedLocation = Singleton.getInstance().getTempLocation();
-            newReminder  = new Reminder(description, label, newReminderTime, selectedLocation);
-        }else {
-
+            newReminder = new Reminder(description, label, newReminderTime, selectedLocation);
+        } else {
             newReminder = new Reminder(description, label, newReminderTime);
         }
-
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -278,7 +224,6 @@ public class NewReminderActivity extends AppCompatActivity {
 
         if (!isDateSet || !isTimeSet) {
             Toast.makeText(this, "Please select a date and time", Toast.LENGTH_SHORT).show();
-            return;
         }
     }
 

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="match_parent"
@@ -18,9 +18,10 @@
         android:id="@+id/location_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Location Nickname"
+        android:autofillHints=""
+        android:hint="@string/location_nickname"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"/>
+        android:layout_marginEnd="20dp" />
 
     <SeekBar
         android:id="@+id/accuracy_radius_seekbar"
@@ -38,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="Accuracy Radius: 0 meters"
+        android:text="@string/accuracy_radius_10_meters"
         android:textSize="16sp" />
 
 

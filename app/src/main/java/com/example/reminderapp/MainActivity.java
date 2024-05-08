@@ -1,195 +1,107 @@
 package com.example.reminderapp;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.activity.result.ActivityResultCallback;
-
-import android.location.Address;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.text.TextUtils;
 
-import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-
-
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 public class MainActivity extends AppCompatActivity {
-    private PlacesClient placesClient;
-
-    private boolean isFineLocationPermissionGranted = false;
-    private boolean isCoarseLocationPermissionGranted = false;
-    private boolean isNotificationPermissionGranted = false;
-    private ActivityResultLauncher<String[]> mPermissionResultLauncher;
-    private double lastKnownLatitude;
-    private double lastKnownLongitude;
+    private static final int PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Intent serviceIntent = new Intent(this, NotificationScheduleService.class);
-        startService(serviceIntent);
-        Intent serviceIntent1 = new Intent(this, NotificationSendingService.class);
-        startService(serviceIntent1);
+        Intent notificationSchedule = new Intent(this, NotificationScheduleService.class);
+        startService(notificationSchedule);
 
-        Log.d("MainActivity", "Hello World");
+        Intent notificationSending = new Intent(this, NotificationSendingService.class);
+        startService(notificationSending);
 
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
-        //createNotificationChannel();
+        String[] permissions = {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE
+        };
+
+        if (!hasPermissions(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
+        }
+
         Button newRemindButton = findViewById(R.id.NewReminder);
         Button myRemindersButton = findViewById(R.id.MyReminders);
-        Button mapButton = findViewById(R.id.map);
         ImageButton profileButton = findViewById(R.id.profileButton);
 
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(profileIntent);
-            }
+        profileButton.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(profileIntent);
         });
 
-
-        newRemindButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("MainActivity", "New Reminder Button clicked");
-                Intent newRemind = new Intent(MainActivity.this, NewReminderActivity.class);
-                startActivity(newRemind);
-            }
+        newRemindButton.setOnClickListener(view -> {
+            Log.d("MainActivity", "New Reminder Button clicked");
+            Intent newRemind = new Intent(MainActivity.this, NewReminderActivity.class);
+            startActivity(newRemind);
         });
 
-        myRemindersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        myRemindersButton.setOnClickListener(v -> {
 
-                Log.d("MainActivity", "View Reminder Button clicked");
+            Log.d("MainActivity", "View Reminder Button clicked");
 
-                Intent myReminders = new Intent(MainActivity.this, UserReminders.class);
-                startActivity(myReminders);
+            Intent myReminders = new Intent(MainActivity.this, UserReminders.class);
+            startActivity(myReminders);
 
-            }
         });
 
         String apiKey = BuildConfig.MAPS_API_KEY;
 
-        // Log an error if apiKey is not set.
         if (TextUtils.isEmpty(apiKey)) {
             Log.e("Places test", "No api key");
             finish();
             return;
         }
 
-        // Initialize the SDK
         Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey);
 
-        // Create a new PlacesClient instance
-        placesClient = Places.createClient(this);
+        Places.createClient(this);
 
+    }
 
+    private boolean hasPermissions(String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        requestPermissions();
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private void requestPermissions() {
-        mPermissionResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
-            @Override
-            public void onActivityResult(Map<String, Boolean> result) {
-                if (result.get(Manifest.permission.ACCESS_FINE_LOCATION) != null) {
-                    isFineLocationPermissionGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
-                }
-
-                if (result.get(Manifest.permission.ACCESS_COARSE_LOCATION) != null) {
-                    isCoarseLocationPermissionGranted = result.get(Manifest.permission.ACCESS_COARSE_LOCATION);
-                }
-
-                if (result.get(Manifest.permission.POST_NOTIFICATIONS) != null) {
-                    isNotificationPermissionGranted = result.get(Manifest.permission.POST_NOTIFICATIONS);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("MainActivity", "Permission granted: " + permissions[i]);
+                } else {
+                    Log.d("MainActivity", "Permission denied: " + permissions[i]);
                 }
             }
-        });
-
-        List<String> permissionRequest = new ArrayList<>();
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionRequest.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            permissionRequest.add(Manifest.permission.POST_NOTIFICATIONS);
-        }
-
-        if (!permissionRequest.isEmpty()) {
-            mPermissionResultLauncher.launch(permissionRequest.toArray(new String[0]));
         }
     }
-
-
-    //creates reminder based on reminder object details
-    private void createNotification(Reminder reminder) {
-        System.out.println("hi!");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
-
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(reminder.getTitle() + reminder.getDateInput())
-                .setContentText(reminder.getDescription())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        System.out.println("hi!2");
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        System.out.println("hi!3");
-        // notificationId is a unique int for each notification that you must define
-        System.out.println("hi!4");
-
-    }
-
-
 }
 
