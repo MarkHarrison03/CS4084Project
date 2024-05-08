@@ -2,6 +2,9 @@ package com.example.reminderapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ListView;
 
@@ -17,7 +20,6 @@ import java.util.List;
 
 public class ViewReminderActivity extends AppCompatActivity {
 
-
     private ReminderAdapter mReminderAdapter;
 
     @Override
@@ -29,29 +31,43 @@ public class ViewReminderActivity extends AppCompatActivity {
         mReminderAdapter = new ReminderAdapter(this, new ArrayList<>());
         mReminderListView.setAdapter(mReminderAdapter);
 
-        FirebaseApp.initializeApp(this);
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference mRemindersRef = database.getReference("reminders");
+        new FetchRemindersTask().execute();
+    }
 
-        mRemindersRef.addValueEventListener(new ValueEventListener() {
+    @SuppressLint("StaticFieldLeak")
+    private class FetchRemindersTask extends AsyncTask<Void, Void, List<Reminder>> {
 
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Reminder> reminders = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Reminder reminder = snapshot.getValue(Reminder.class);
-                    if (reminder != null) {
-                        reminders.add(reminder);
+        @Override
+        protected List<Reminder> doInBackground(Void... voids) {
+            List<Reminder> reminders = new ArrayList<>();
+            FirebaseApp.initializeApp(ViewReminderActivity.this);
+            FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
+            DatabaseReference mRemindersRef = database.getReference("reminders");
+
+            mRemindersRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Reminder reminder = snapshot.getValue(Reminder.class);
+                        if (reminder != null) {
+                            reminders.add(reminder);
+                        }
                     }
                 }
-                mReminderAdapter.clear();
-                mReminderAdapter.addAll(reminders);
-                mReminderAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    System.out.println("The read failed: " + databaseError.getCode());
+                }
+            });
+            return reminders;
+        }
+
+        @Override
+        protected void onPostExecute(List<Reminder> reminders) {
+            mReminderAdapter.clear();
+            mReminderAdapter.addAll(reminders);
+            mReminderAdapter.notifyDataSetChanged();
+        }
     }
 }

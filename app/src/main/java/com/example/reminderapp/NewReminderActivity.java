@@ -1,51 +1,31 @@
 package com.example.reminderapp;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class NewReminderActivity extends AppCompatActivity {
 
@@ -58,14 +38,7 @@ public class NewReminderActivity extends AppCompatActivity {
     int dayOfMonth;
     boolean isLocation = false;
     boolean isDateSet = false;
-
     boolean isTimeSet = false;
-
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String email = Singleton.getInstance().getUserEmail();
-
-
-    String location;
     Button submitButton;
     List<Location> locations = new ArrayList<>();
 
@@ -102,7 +75,6 @@ public class NewReminderActivity extends AppCompatActivity {
             showDatePickerDialog();
         });
 
-
         locationCheck.setOnClickListener(view -> {
             if (((CheckBox) view).isChecked()) {
                 isLocation = true;
@@ -113,23 +85,16 @@ public class NewReminderActivity extends AppCompatActivity {
             }
         });
 
-
         submitButton.setOnClickListener(view -> {
             Log.d("NewReminder", "Submit button clicked");
-
             if (isDateSet && isTimeSet) {
                 submitButton.setEnabled(false);
                 submittedReminder();
             } else {
                 Toast.makeText(NewReminderActivity.this, "Please select a date and time", Toast.LENGTH_SHORT).show();
             }
-
-
         });
-
-
     }
-
 
     private void showTimePickerDialog() {
         TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -173,6 +138,8 @@ public class NewReminderActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(NewReminderActivity.this, onDateSetListener, year, month, dayOfMonth);
         datePickerDialog.show();
     }
+
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private void submittedReminder() {
 
