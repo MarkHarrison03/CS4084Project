@@ -66,6 +66,22 @@ public class Register extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(Register.this, "Authentication Success.",
                                             Toast.LENGTH_SHORT).show();
+
+                                    mAuth.signInWithEmailAndPassword(email, password)
+                                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Singleton currentUser = Singleton.getInstance();
+                                                        currentUser.setCurrentUserEmail(email);
+                                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                        startActivity(intent);
+                                                    } else {
+                                                        Toast.makeText(Register.this, "Authentication failed.",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(Register.this, "Authentication failed.",
@@ -73,7 +89,6 @@ public class Register extends AppCompatActivity {
                                 }
                             }
                         });
-
 
             }
         });

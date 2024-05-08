@@ -9,18 +9,16 @@
         private String userName;
         private ArrayList<Reminder> userReminders;
         private ArrayList<Location> userLocations;
-        private ArrayList<LocationReminder> userLocationReminders;
         private ArrayList<Reminder> todayReminders;
 
 
 
-        public User(String firstName, String lastName, String userName, ArrayList<Reminder> userReminders, ArrayList<Location> userLocations, ArrayList<LocationReminder> userLocationReminders) {
+        public User(String firstName, String lastName, String userName, ArrayList<Reminder> userReminders, ArrayList<Location> userLocations) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.userName = userName;
             this.userReminders = userReminders;
             this.userLocations = userLocations;
-            this.userLocationReminders = userLocationReminders;
         }
 
         public ArrayList<Reminder> getUserReminders() {
@@ -63,14 +61,6 @@
             this.userLocations = userLocations;
         }
 
-        public ArrayList<LocationReminder> getUserLocationReminders() {
-            return userLocationReminders;
-        }
-
-        public void setUserLocationReminders(ArrayList<LocationReminder> userLocationReminders) {
-            this.userLocationReminders = userLocationReminders;
-        }
-
         public void addUserReminder(Reminder reminder) {
             userReminders.add(reminder);
         }
@@ -89,13 +79,6 @@
             userLocations.removeIf(Objects::isNull);
         }
 
-        public void addUserLocationReminder(LocationReminder locationReminder){
-            userLocationReminders.add(locationReminder);
-        }
-        public void removeLocationReminder(LocationReminder locationReminder) {
-            userLocationReminders.remove(locationReminder);
-            userLocationReminders.removeIf(Objects::isNull);
-        }
         public ArrayList<Reminder> getTodayReminders(){
             return todayReminders;
         }

@@ -1,113 +1,107 @@
 package com.example.reminderapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.time.LocalDateTime;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent serviceIntent = new Intent(this, NotificationScheduleService.class);
-        startService(serviceIntent);
-        Intent serviceIntent1 = new Intent(this, NotificationSendingService.class);
-        startService(serviceIntent1);
-        Log.d("MainActivity", "Hello World");
+
+        Intent notificationSchedule = new Intent(this, NotificationScheduleService.class);
+        startService(notificationSchedule);
+
+        Intent notificationSending = new Intent(this, NotificationSendingService.class);
+        startService(notificationSending);
 
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
-        createNotificationChannel();
+        String[] permissions = {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE
+        };
+
+        if (!hasPermissions(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
+        }
+
         Button newRemindButton = findViewById(R.id.NewReminder);
         Button myRemindersButton = findViewById(R.id.MyReminders);
-        Button mapButton = findViewById(R.id.map);
         ImageButton profileButton = findViewById(R.id.profileButton);
 
-
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(profileIntent);
-            }
-        });
-        newRemindButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("MainActivity", "Hello World");
-                Intent newRemind = new Intent(MainActivity.this, NewReminderActivity.class);
-                startActivity(newRemind);
-
-            }
+        profileButton.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(profileIntent);
         });
 
-        myRemindersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myReminders = new Intent(MainActivity.this, UserReminders.class);
-                startActivity(myReminders);
-            }
+        newRemindButton.setOnClickListener(view -> {
+            Log.d("MainActivity", "New Reminder Button clicked");
+            Intent newRemind = new Intent(MainActivity.this, NewReminderActivity.class);
+            startActivity(newRemind);
         });
 
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View mapview) {
-                Intent newMap = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(newMap);
-            }
+        myRemindersButton.setOnClickListener(v -> {
+
+            Log.d("MainActivity", "View Reminder Button clicked");
+
+            Intent myReminders = new Intent(MainActivity.this, UserReminders.class);
+            startActivity(myReminders);
+
         });
+
+        String apiKey = BuildConfig.MAPS_API_KEY;
+
+        if (TextUtils.isEmpty(apiKey)) {
+            Log.e("Places test", "No api key");
+            finish();
+            return;
+        }
+
+        Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey);
+
+        Places.createClient(this);
+
     }
 
-
-    private void createNotificationChannel() {
-        CharSequence name = "My Notification Channel";
-        String description = "Channel Description";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel("my_channel_id", name, importance);
-        channel.setDescription(description);
-        // Register the channel with the system
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
+    private boolean hasPermissions(String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    //creates reminder based on reminder object details
-    private void createNotification(Reminder reminder) {
-        System.out.println("hi!");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
-                // replace ic_notification with your own icon
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(reminder.getTitle() + reminder.getDateInput())
-                .setContentText(reminder.getDescription())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        System.out.println("hi!2");
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        System.out.println("hi!3");
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(1, builder.build());
-        System.out.println("hi!4");
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("MainActivity", "Permission granted: " + permissions[i]);
+                } else {
+                    Log.d("MainActivity", "Permission denied: " + permissions[i]);
+                }
+            }
+        }
     }
-
-
 }
+

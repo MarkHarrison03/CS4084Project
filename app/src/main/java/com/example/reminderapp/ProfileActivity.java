@@ -1,7 +1,7 @@
 package com.example.reminderapp;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button submitResetEmail;
     Button submitResetPassword;
     EditText newEmailEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -87,20 +88,20 @@ public class ProfileActivity extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
 
                                     String newEmail = newEmailEditText.getText().toString().trim();
-                                            user.updateEmail(newEmail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            // Email address updated successfully
-                                                            Toast.makeText(ProfileActivity.this, "Email address updated successfully", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            // Handle the failure to update email address
-                                                            Toast.makeText(ProfileActivity.this, "Failed to update email address: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
+                                    user.updateEmail(newEmail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Email address updated successfully
+                                                    Toast.makeText(ProfileActivity.this, "Email address updated successfully", Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Handle the failure to update email address
+                                                    Toast.makeText(ProfileActivity.this, "Failed to update email address: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -110,16 +111,12 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
-                        passwordEditText.setError("Password field can't be empty");
+                    passwordEditText.setError("Password field can't be empty");
                 }
             }
 
 
-            });
-
-
-
-
+        });
 
 
         changePasswordButton.setOnClickListener(new View.OnClickListener() {

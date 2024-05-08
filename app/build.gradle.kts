@@ -34,6 +34,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -48,6 +49,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     //code to add the firebase db
     implementation ("com.google.firebase:firebase-database:20.0.0")
+    implementation ("com.google.android.libraries.places:places:3.3.0")
+    implementation ("com.google.android.gms:play-services-location:21.2.0")
+
 
 
     testImplementation("junit:junit:4.13.2")
