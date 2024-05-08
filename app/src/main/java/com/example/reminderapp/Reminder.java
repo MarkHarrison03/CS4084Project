@@ -1,13 +1,9 @@
 package com.example.reminderapp;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.annotation.NonNull;
 
 
-    import java.lang.reflect.Array;
-    import java.time.*;
-    import java.time.format.DateTimeFormatter;
-    import java.util.ArrayList;
+import java.time.*;
 
 
 public class Reminder {
@@ -35,6 +31,7 @@ public class Reminder {
         this.email = Singleton.getInstance().getUserEmail();
         this.location = location;
     }
+
     public Reminder() {
         this.description = "no input";
         this.title = "no input";
@@ -75,36 +72,17 @@ public class Reminder {
         this.title = title;
     }
 
-    public void setIsSent(boolean isSent){
+    public void setIsSent(boolean isSent) {
         this.isSent = isSent;
     }
 
-    public boolean getIsSent(){
+    public boolean getIsSent() {
         return isSent;
     }
 
+    @NonNull
     public String toString() {
-        String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n" + "location: " + location.toString() + "\n" ;
-        return s;
-    }
-
-    //Method to get today's reminders and add them to a separate list to save on cpu and memory usage
-    public void todayReminders(User user) {
-        LocalDate currentDate = LocalDate.now();
-        ArrayList<Reminder> reminders = user.getUserReminders();
-        for (Reminder r : reminders) {
-            if (r.getDateInput().toLocalDate().equals(currentDate)) {
-                user.addTodayReminder(r);
-            }
-        }
-        //Checking if there are any reminders not for today's date in here and removing them
-        for (Reminder rem : user.getTodayReminders()) {
-            if (!(rem.getDateInput().toLocalDate().equals(currentDate))) {
-                user.removeTodayReminder(rem);
-            }
-
-
-        }
+        return "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n" + "location: ";
     }
 
 }

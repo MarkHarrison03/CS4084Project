@@ -2,6 +2,7 @@ package com.example.reminderapp;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,10 +10,8 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,80 +29,46 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class newLocation_dialog {
     private Location tempLocation;
     private String locationNickname;
-    private static String selectedLocationData;
-    int accuracyRadius = 10;
-    private Context context;
-    private List<Location> locations = new ArrayList<>(); // Add this line
-    private FragmentActivity fragmentActivity;
+    private int accuracyRadius = 10;
 
-    public void showDialog(Activity activity, FragmentActivity fragmentActivity, List<Location> locations) {
+    public void showDialog(Activity activity, FragmentActivity fragmentActivity) {
 
-        this.context = activity;
-        this.fragmentActivity = fragmentActivity;
-        this.locations = locations;
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = LayoutInflater.from(activity);
         View dialogView = inflater.inflate(R.layout.newlocation_dialog, null);
         builder.setView(dialogView);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText locationNicknameEditText = dialogView.findViewById(R.id.location_nickname);
-                        locationNickname = locationNicknameEditText.getText().toString();
 
-                        if (tempLocation != null) {
-                            tempLocation.setNickname(locationNickname);
-                        }
-                        Singleton.getInstance().setTempLocation(tempLocation);
+        builder.setPositiveButton("OK", (dialog, id) -> {
+            EditText locationNicknameEditText = dialogView.findViewById(R.id.location_nickname);
+            locationNickname = locationNicknameEditText.getText().toString();
 
-
-                        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
-                        DatabaseReference locationsRef = database.getReference("locations");
-                        String userId = Singleton.getInstance().getCurrentUserId();
-
-                        DatabaseReference userLocationsRef = locationsRef.child(userId);
-                        String userEmail = Singleton.getInstance().getUserEmail();
-
-                        userLocationsRef.push().setValue(tempLocation)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("NewLocation", "Firebase push success");
-                                        locations.add(tempLocation);}
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("NewLocation", "Firebase push failed");
-                                    }
-                                });
+            if (tempLocation != null) {
+                tempLocation.setNickname(locationNickname);
+            }
+            Singleton.getInstance().setTempLocation(tempLocation);
 
 
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+        }).setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
 
         SeekBar accuracyRadiusSeekBar = dialogView.findViewById(R.id.accuracy_radius_seekbar);
         TextView accuracyRadiusValueTextView = dialogView.findViewById(R.id.accuracy_radius_value);
 
         accuracyRadiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @SuppressLint("SetTextI18n")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 accuracyRadius = progress;
                 accuracyRadiusValueTextView.setText("Accuracy Radius: " + progress + " meters");
+
+                if (tempLocation != null) {
+                    tempLocation.setAccuracyRadius(accuracyRadius);
+                }
             }
 
             @Override
@@ -115,9 +80,9 @@ public class newLocation_dialog {
             }
         });
 
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                fragmentActivity.getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment) fragmentActivity.getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+        assert autocompleteFragment != null;
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -131,7 +96,6 @@ public class newLocation_dialog {
 
                     tempLocation = new Location("", place.getAddress(), latitude, longitude, accuracyRadius, userEmail);
 
-                    selectedLocationData = place.getName() + " (" + place.getAddress() + ")";
                 } else {
                     Log.e(TAG, "LatLng object is null for place: " + place.getName());
                 }
@@ -144,16 +108,11 @@ public class newLocation_dialog {
         });
 
         AlertDialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                if (com.google.android.libraries.places.api.Places.isInitialized()) {
-                    com.google.android.libraries.places.api.Places.deinitialize();
-                }
+        dialog.setOnDismissListener(dialogInterface -> {
+            if (com.google.android.libraries.places.api.Places.isInitialized()) {
+                com.google.android.libraries.places.api.Places.deinitialize();
             }
         });
         dialog.show();
     }
-
-
 }

@@ -18,9 +18,6 @@ import java.util.List;
 public class ViewReminderActivity extends AppCompatActivity {
 
 
-
-    private DatabaseReference mRemindersRef;
-    private ListView mReminderListView;
     private ReminderAdapter mReminderAdapter;
 
     @Override
@@ -28,13 +25,13 @@ public class ViewReminderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_reminder);
 
-        mReminderListView = findViewById(R.id.ReminderList);
+        ListView mReminderListView = findViewById(R.id.ReminderList);
         mReminderAdapter = new ReminderAdapter(this, new ArrayList<>());
         mReminderListView.setAdapter(mReminderAdapter);
 
         FirebaseApp.initializeApp(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
-        mRemindersRef = database.getReference("reminders");
+        DatabaseReference mRemindersRef = database.getReference("reminders");
 
         mRemindersRef.addValueEventListener(new ValueEventListener() {
 
