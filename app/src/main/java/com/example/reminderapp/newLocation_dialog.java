@@ -42,16 +42,12 @@ public class newLocation_dialog {
     private List<Location> locations = new ArrayList<>(); // Add this line
     private FragmentActivity fragmentActivity;
 
-    public void showDialog(Activity activity, FragmentActivity fragmentActivity, List<Location> locations, Spinner locationsSpinner) {
+    public void showDialog(Activity activity, FragmentActivity fragmentActivity, List<Location> locations) {
 
         this.context = activity;
         this.fragmentActivity = fragmentActivity;
         this.locations = locations;
 
-        ArrayAdapter<Location> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, locations);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        locationsSpinner.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -65,13 +61,14 @@ public class newLocation_dialog {
 
                         if (tempLocation != null) {
                             tempLocation.setNickname(locationNickname);
-                            adapter.notifyDataSetChanged();
                         }
+                        Singleton.getInstance().setTempLocation(tempLocation);
 
 
                         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
                         DatabaseReference locationsRef = database.getReference("locations");
                         String userId = Singleton.getInstance().getCurrentUserId();
+
                         DatabaseReference userLocationsRef = locationsRef.child(userId);
                         String userEmail = Singleton.getInstance().getUserEmail();
 
@@ -80,9 +77,7 @@ public class newLocation_dialog {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d("NewLocation", "Firebase push success");
-                                        locations.add(tempLocation);
-                                        adapter.notifyDataSetChanged();
-                                    }
+                                        locations.add(tempLocation);}
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -134,7 +129,6 @@ public class newLocation_dialog {
                     double longitude = latLng.longitude;
                     String userEmail = Singleton.getInstance().getUserEmail();
 
-                    adapter.notifyDataSetChanged();
                     tempLocation = new Location("", place.getAddress(), latitude, longitude, accuracyRadius, userEmail);
 
                     selectedLocationData = place.getName() + " (" + place.getAddress() + ")";

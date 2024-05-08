@@ -12,6 +12,13 @@ public class Singleton {
     private static Singleton instance;
     private double currentLatitude;
     private double currentLongitude;
+    private Location tempLocation;
+    public Location getTempLocation() {
+        return tempLocation;
+    }
+    public void setTempLocation(Location tempLocation) {
+        this.tempLocation = tempLocation;
+    }
 
     private ArrayList<Reminder> currentUserReminders;
 
