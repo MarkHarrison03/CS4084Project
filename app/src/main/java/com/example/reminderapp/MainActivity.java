@@ -11,12 +11,23 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
@@ -43,29 +54,12 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
         }
 
-        Button newRemindButton = findViewById(R.id.NewReminder);
-        Button myRemindersButton = findViewById(R.id.MyReminders);
-        ImageButton profileButton = findViewById(R.id.profileButton);
+        setContentView(R.layout.activity_user_reminder);
+        databaseQuery();
 
-        profileButton.setOnClickListener(v -> {
-            Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(profileIntent);
-        });
-
-        newRemindButton.setOnClickListener(view -> {
-            Log.d("MainActivity", "New Reminder Button clicked");
-            Intent newRemind = new Intent(MainActivity.this, NewReminderActivity.class);
-            startActivity(newRemind);
-        });
-
-        myRemindersButton.setOnClickListener(v -> {
-
-            Log.d("MainActivity", "View Reminder Button clicked");
-
-            Intent myReminders = new Intent(MainActivity.this, UserReminders.class);
-            startActivity(myReminders);
-
-        });
+        for(Reminder r : Singleton.getInstance().getUserReminders()){
+            Log.d("TODAY", r.toString());
+        }
 
         String apiKey = BuildConfig.MAPS_API_KEY;
 
@@ -103,5 +97,39 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void databaseQuery(){
+
+        ArrayList<Reminder> reminderList = new ArrayList<>();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference remindersRef = database.getReference().child("reminders");
+
+        Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    reminderList.add(Utils.parseDataToReminder(snapshot.toString()));
+                }
+                displayReminders(reminderList);
+            }
+
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle error
+                Toast.makeText(MainActivity.this, "Failed to fetch reminders: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public void displayReminders(ArrayList<Reminder> reminderList){
+        ListView listView = findViewById(R.id.listView);
+        // Initialize Adapter
+        ArrayAdapter<Reminder> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reminderList);
+        listView.setAdapter(adapter);
+    }
+
 }
 
