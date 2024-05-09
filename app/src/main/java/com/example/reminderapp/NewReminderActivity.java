@@ -30,6 +30,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+
 public class NewReminderActivity extends AppCompatActivity {
 
     String label;
@@ -42,6 +44,7 @@ public class NewReminderActivity extends AppCompatActivity {
     boolean isLocation = false;
     boolean isDateSet = false;
     boolean isTimeSet = false;
+
     Button submitButton;
     List<Location> locations = new ArrayList<>();
 

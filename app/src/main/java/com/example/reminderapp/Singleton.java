@@ -16,6 +16,8 @@ public class Singleton {
     public Location getTempLocation() {
         return tempLocation;
     }
+
+    private int currentPosNavbar;
     public void setTempLocation(Location tempLocation) {
         this.tempLocation = tempLocation;
     }
@@ -39,7 +41,7 @@ public class Singleton {
     public void setCurrentUserId(String currentUserId) {
         this.currentUserId = currentUserId;
     }
-
+    public void setCurrentPosNavbar(int pos){ this.currentPosNavbar = pos;}
     public String getCurrentUserId() {
         return currentUserId;
     }
@@ -51,6 +53,8 @@ public class Singleton {
     public String getUserEmail() {
         return currentUserEmail;
     }
+    public int getCurrentPosNavbar(){ return currentPosNavbar;}
+
 
     public void addReminderToArr(Reminder newReminder) {
         currentUserReminders.add(newReminder);
