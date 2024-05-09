@@ -13,14 +13,19 @@ import android.os.Looper;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -30,10 +35,33 @@ public class NotificationSendingService extends Service {
 
     FusedLocationProviderClient fusedLocationProviderClient;
 
+    private void requestLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        }
+    }
+
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(@NonNull LocationResult locationResult) {
+            Location location = locationResult.getLastLocation();
+            if (location != null) {
+                Singleton.getInstance().setCurrentLatitude(location.getLatitude());
+                Singleton.getInstance().setCurrentLongitude(location.getLongitude());
+            }
+        }
+    };
+
     @Override
     public void onCreate() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         super.onCreate();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(INTERVAL);
+        locationRequest.setFastestInterval(INTERVAL);
+        requestLocationUpdates();
         handler = new Handler(Looper.getMainLooper());
         scheduleTask();
     }
@@ -42,8 +70,8 @@ public class NotificationSendingService extends Service {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ArrayList<Reminder> userReminders = Singleton.getInstance().getUserReminders();
                 getLastLocation();
+                ArrayList<Reminder> userReminders = Singleton.getInstance().getUserReminders();
                 for (Reminder reminder : userReminders) {
                     System.out.println(reminder);
 
@@ -133,8 +161,11 @@ public class NotificationSendingService extends Service {
                 boolean atLocation = radiusCheck(reminder.getLocation());
                 System.out.println(atLocation);
                 LocalDateTime now = LocalDateTime.now();
-                boolean time = reminder.getDateInput().getHour() == now.getHour() &&
-                        reminder.getDateInput().getMinute() == now.getMinute();
+                LocalDateTime startDate = reminder.getDateInput();
+                LocalDateTime endDate = reminder.getEndDate();
+                System.out.println("Enddate" + endDate);
+                System.out.println();
+                boolean time = now.isAfter(startDate) || now.isEqual(startDate) && now.isBefore(endDate);
                 return (atLocation && time);
             } else {
                 LocalDateTime now = LocalDateTime.now();
