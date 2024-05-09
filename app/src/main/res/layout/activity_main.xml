@@ -14,6 +14,15 @@
         android:textColor="@color/white"
         android:textSize="48sp" />
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/textView"
+        android:layout_marginTop="4dp"
+        android:background="@color/white"
+        android:visibility="visible" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
@@ -30,7 +39,8 @@
         android:name="com.example.reminderapp.Navbar"
         style="?android:attr/listViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
 
 </RelativeLayout>

@@ -20,6 +20,9 @@ public class Reminder {
     private LocalDateTime endDate;
 
 
+
+
+
     public Reminder(String description, String title, LocalDateTime dateInput) {
         this.description = description;
         this.dateInput = dateInput;
@@ -87,7 +90,9 @@ public class Reminder {
     }
 
     public String toString() {
-        String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n" + "location: " + location.toString() + "\n" ;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedDateTime = dateInput.format(formatter);
+        String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + formattedDateTime + "\n" ;
         return s;
     }
 
