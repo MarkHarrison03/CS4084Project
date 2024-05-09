@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
         }
 
-        setContentView(R.layout.activity_user_reminder);
         databaseQuery();
 
         for(Reminder r : Singleton.getInstance().getUserReminders()){
