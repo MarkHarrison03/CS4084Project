@@ -164,7 +164,7 @@ public class NewReminderActivity extends AppCompatActivity {
         TimePickerDialog.OnTimeSetListener onTimeSetListener = (timePicker, selectedHour, selectedMinute) -> {
             endHour = selectedHour;
             endMinute = selectedMinute;
-            Button timeButton = findViewById(R.id.TimeButton);
+            Button timeButton = findViewById(R.id.EndTimeButton);
             timeButton.setText(String.format(Locale.getDefault(), "%02d:%02d", endHour,endMinute));
             isEndTimeSet = true;
             if (isEndDateSet && isTimeSet && isDateSet) {
@@ -187,7 +187,7 @@ public class NewReminderActivity extends AppCompatActivity {
             endMonth = selectedMonth + 1;
             endDayOfMonth = selectedDayOfMonth;
 
-            Button dateButton = findViewById(R.id.DateButton);
+            Button dateButton = findViewById(R.id.EndDateButton);
             dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", endDayOfMonth, endMonth, endYear));
             isEndDateSet = true;
             if (isEndTimeSet && isDateSet && isTimeSet) {
