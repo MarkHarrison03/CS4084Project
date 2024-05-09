@@ -29,6 +29,7 @@ public class Utils {
         String email = "";
         Location location = null;
         LocalDateTime datetime = null;
+        LocalDateTime endDate = null;
         for (int i = 0; i < splitString.length; i++) {
 
 
@@ -41,6 +42,10 @@ public class Utils {
             if(splitString[i].equals(" dateInput")){
                 datetime = LocalDateTime.of(Integer.parseInt(splitString[i+13]), monthMap.get(splitString[i+7]).intValue(), Integer.parseInt(splitString[i+9]), Integer.parseInt(splitString[i+5]), Integer.parseInt(splitString[i+26]), Integer.parseInt(splitString[i+28]));
             }
+            if(splitString[i].equals(" endDate")){
+                endDate = LocalDateTime.of(Integer.parseInt(splitString[i+13]), monthMap.get(splitString[i+7]).intValue(), Integer.parseInt(splitString[i+9]), Integer.parseInt(splitString[i+5]), Integer.parseInt(splitString[i+26]), Integer.parseInt(splitString[i+28]));
+            }
+
             if(splitString[i].equals(" email")){
                 email = splitString[i+1];
             }
@@ -52,7 +57,7 @@ public class Utils {
         }
         Reminder newReminder;
         if(location != null) {
-             newReminder = new Reminder(description, title, datetime,location);
+             newReminder = new Reminder(description, title, datetime,location, endDate);
         }else{
              newReminder = new Reminder(description, title, datetime);
         }
