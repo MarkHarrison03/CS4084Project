@@ -24,16 +24,20 @@ public class Navbar extends Fragment {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.add) {
-g                    startActivity(new Intent(getActivity(), NewReminderActivity.class));
+
+                    startActivity(new Intent(getActivity(), NewReminderActivity.class));
 
                         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                         Singleton.getInstance().setCurrentPosNavbar(0);
+
+
                     getActivity().finish();
                     return true;
                 } else if (item.getItemId() == R.id.home) {
                     int loc = Singleton.getInstance().getCurrentPosNavbar();
 
                     startActivity(new Intent(getActivity(), MainActivity.class));
+
                     if(loc == 0) {
                         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }else{
@@ -44,7 +48,10 @@ g                    startActivity(new Intent(getActivity(), NewReminderActivity
                     return true;
                 } else if (item.getItemId() == R.id.profile) {
                     startActivity(new Intent(getActivity(), ProfileActivity.class));
+
                     getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+
                     Singleton.getInstance().setCurrentPosNavbar(1);
 
 
@@ -55,6 +62,7 @@ g                    startActivity(new Intent(getActivity(), NewReminderActivity
                 return false;
             }
         });
+
 
         return view;
     }
