@@ -33,6 +33,7 @@
         android:layout_height="53dp"
         android:layout_marginStart="52dp"
         android:layout_marginEnd="53dp"
+        android:inputType="textPassword"
         android:layout_marginBottom="372dp"
         android:hint="Password"
         app:layout_constraintBottom_toBottomOf="parent"
