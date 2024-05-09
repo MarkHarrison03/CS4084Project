@@ -78,7 +78,7 @@ public class Login extends AppCompatActivity {
                                     currentUser.setCurrentUserEmail(email);
                                     Toast.makeText(Login.this, "Authentication success.",
                                             Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), UserReminders.class);
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(intent);
                                     String uid = mAuth.getCurrentUser().getUid();
                                     Singleton.getInstance().setCurrentUserId(uid);

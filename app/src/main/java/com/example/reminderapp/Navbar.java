@@ -16,6 +16,7 @@ public class Navbar extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        System.out.println("THE FRAGMENT IS CREATED");
         View view = inflater.inflate(R.layout.fragment_navbar, container, false);
 
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
