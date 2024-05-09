@@ -50,9 +50,7 @@ public class NotificationSendingService extends Service {
                 Singleton.getInstance().setCurrentLatitude(location.getLatitude());
                 Singleton.getInstance().setCurrentLongitude(location.getLongitude());
             }
-            System.out.println("LOCATION:");
-            System.out.println("LAT:" + Singleton.getInstance().getCurrentLatitude());
-            System.out.println("LONG:" + Singleton.getInstance().getCurrentLongitude());
+
         }
     };
 
