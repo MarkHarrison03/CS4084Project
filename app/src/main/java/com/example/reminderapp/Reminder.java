@@ -1,9 +1,13 @@
 package com.example.reminderapp;
 
-import androidx.annotation.NonNull;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
+import java.lang.reflect.Array;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 
 public class Reminder {
@@ -13,6 +17,7 @@ public class Reminder {
     private String email;
     private Location location;
     private boolean isSent = false;
+    private LocalDateTime endDate;
 
 
     public Reminder(String description, String title, LocalDateTime dateInput) {
@@ -24,14 +29,14 @@ public class Reminder {
 
     }
 
-    public Reminder(String description, String title, LocalDateTime dateInput, Location location) {
+    public Reminder(String description, String title, LocalDateTime startDate, Location location, LocalDateTime endDate) {
         this.description = description;
-        this.dateInput = dateInput;
+        this.dateInput = startDate;
         this.title = title;
         this.email = Singleton.getInstance().getUserEmail();
         this.location = location;
+        this.endDate = endDate;
     }
-
     public Reminder() {
         this.description = "no input";
         this.title = "no input";
@@ -72,17 +77,24 @@ public class Reminder {
         this.title = title;
     }
 
-    public void setIsSent(boolean isSent) {
+    public void setIsSent(boolean isSent){
         this.isSent = isSent;
     }
 
-    public boolean getIsSent() {
+    public boolean getIsSent(){
         return isSent;
     }
 
-    @NonNull
     public String toString() {
-        return "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n" + "location: ";
+        String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + dateInput + "\n" + "location: " + location.toString() + "\n" ;
+        return s;
     }
 
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
 }
