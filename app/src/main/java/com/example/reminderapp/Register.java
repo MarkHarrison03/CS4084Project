@@ -50,12 +50,12 @@ public class Register extends AppCompatActivity {
                 password = String.valueOf(editTextPassword.getText());
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(Register.this, "Enter Email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, "Please fill in all details.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(Register.this, "Enter Email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, "Please fill in all details. ", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -64,7 +64,7 @@ public class Register extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(Register.this, "Authentication Success.",
+                                    Toast.makeText(Register.this, "Account Creation Successful.",
                                             Toast.LENGTH_SHORT).show();
 
                                     mAuth.signInWithEmailAndPassword(email, password)
@@ -83,9 +83,9 @@ public class Register extends AppCompatActivity {
                                                 }
                                             });
                                 } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(Register.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                    String errorMessage = task.getException().getMessage();
+                                    Toast.makeText(Register.this, errorMessage,
+                                            Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

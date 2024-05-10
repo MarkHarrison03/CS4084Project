@@ -43,6 +43,16 @@ public class ProfileActivity extends AppCompatActivity {
 //        edtEmail = findViewById(R.id.emailEditText);
 //        mAuth = FirebaseAuth.getInstance();
 //        submitResetEmail = findViewById(R.id.submitResetEmail);
+        Button signout = findViewById(R.id.buttonRegister);
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Register.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
 //        submitResetPassword = findViewById(R.id.submitResetPassword);
 //        passwordEditText = findViewById(R.id.passwordEditText);
 //        newEmailEditText = findViewById(R.id.newEmailEditText);

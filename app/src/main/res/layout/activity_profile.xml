@@ -41,6 +41,21 @@ Seamlessly sync your reminders across multiple devices so you can stay organized
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/geo_echo_icons_03" />
 
+    <Button
+        android:id="@+id/buttonRegister"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="169dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginBottom="68dp"
+        android:text="Sign Out"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/cardview_dark_background"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
