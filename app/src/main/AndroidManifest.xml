@@ -15,8 +15,8 @@
         android:label="GeoEcho"
         android:roundIcon="@mipmap/icon_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ReminderApp"
-
+        android:theme="@style/Theme.AppCompat.DayNight"
+g
         tools:targetApi="31">
         <service
             android:name=".NotificationScheduleService"
