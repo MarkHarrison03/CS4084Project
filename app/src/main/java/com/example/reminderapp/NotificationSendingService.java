@@ -12,6 +12,7 @@ import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 
@@ -50,6 +51,7 @@ public class NotificationSendingService extends Service {
         public void onLocationResult(@NonNull LocationResult locationResult) {
             Location location = locationResult.getLastLocation();
             if (location != null) {
+
                 System.out.println("LOCATION UPDATE ");
                 Singleton.getInstance().setCurrentLatitude(location.getLatitude());
                 Singleton.getInstance().setCurrentLongitude(location.getLongitude());
@@ -80,9 +82,10 @@ public class NotificationSendingService extends Service {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Log.d("Schedulesrvc", "Notification srvc started");
                 getLastLocation();
-                System.out.println("LOC LAT:" + Singleton.getInstance().getCurrentLatitude());
-                System.out.println("LOC LONG:" + Singleton.getInstance().getCurrentLongitude());
+                Log.d("ScheduleSrvc", "LOC LAT:" + Singleton.getInstance().getCurrentLatitude());
+                Log.d("ScheduleSrvc", "LOC LONG:" + Singleton.getInstance().getCurrentLongitude());
                 ArrayList<Reminder> userReminders = Singleton.getInstance().getUserReminders();
                 for (Reminder reminder : userReminders) {
 
@@ -102,6 +105,8 @@ public class NotificationSendingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("Schedulesrvc", "Notification srvc ended");
+
         handler.removeCallbacksAndMessages(null);
     }
 

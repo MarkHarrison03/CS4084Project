@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class NotificationScheduleService extends Service {
     private Handler handler;
     private final long INTERVAL = 30000;
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference remindersRef = database.getReference().child("reminders");
 
@@ -41,6 +43,7 @@ public class NotificationScheduleService extends Service {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Log.d("Schedulesrvc", "schedule Service start");
                 // Code to check the database for reminders
                 // and store them locally
                 checkAndStoreReminders();
@@ -54,8 +57,8 @@ public class NotificationScheduleService extends Service {
 
     private void checkAndStoreReminders() {
         Log.d("Running", "running now!");
-
-        Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail());
+        Log.d("Running", Singleton.getInstance().getUserEmail().toLowerCase());
+        Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail().toLowerCase().trim());
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -73,6 +76,7 @@ public class NotificationScheduleService extends Service {
 
                         if (unique) {
                             Singleton.getInstance().addReminderToArr(currentReminder);
+                            Log.d("RUNNING", Singleton.getInstance().getUserReminders().toString());
                         }
                     }
                 }
@@ -88,6 +92,7 @@ public class NotificationScheduleService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("Schedulesrvc", "schedule Service destroyed");
         // Stop the handler when the service is destroyed
         handler.removeCallbacksAndMessages(null);
     }

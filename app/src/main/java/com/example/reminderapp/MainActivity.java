@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -88,6 +89,17 @@ public class MainActivity extends AppCompatActivity {
         if (!hasPermissions(permissions)) {
             ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
         }
+        SwipeRefreshLayout swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
 
         databaseQuery();
 
@@ -138,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference remindersRef = database.getReference().child("reminders");
-
-        Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail());
+        Log.d("ReminderHelp", Singleton.getInstance().getUserEmail().toLowerCase());
+        Query query = remindersRef.orderByChild("email").equalTo(Singleton.getInstance().getUserEmail().toLowerCase().trim());
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -147,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     reminderList.add(Utils.parseDataToReminder(snapshot.toString()));
                 }
-                System.out.println("LIST:" + reminderList);
+               Log.d("ReminderHelp" , reminderList.toString());
                 displayReminders(reminderList);
             }
 

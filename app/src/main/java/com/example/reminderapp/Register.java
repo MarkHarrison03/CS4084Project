@@ -73,7 +73,7 @@ public class Register extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                                     if (task.isSuccessful()) {
                                                         Singleton currentUser = Singleton.getInstance();
-                                                        currentUser.setCurrentUserEmail(email.toLowerCase());
+                                                        currentUser.setCurrentUserEmail(email.toLowerCase().trim());
                                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                                         startActivity(intent);
                                                     } else {

@@ -75,7 +75,7 @@ public class Login extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Singleton currentUser = Singleton.getInstance();
-                                    currentUser.setCurrentUserEmail(email.toLowerCase());
+                                    currentUser.setCurrentUserEmail(email.toLowerCase().trim());
                                     Toast.makeText(Login.this, "Authentication success.",
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
