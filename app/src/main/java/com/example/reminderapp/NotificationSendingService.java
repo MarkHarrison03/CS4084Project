@@ -129,20 +129,32 @@ public class NotificationSendingService extends Service {
         createNotificationChannel();
         Bitmap largeIconBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.icon);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
+        if(reminder.getLocation() == null) {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
 
-                .setSmallIcon(R.drawable.geo_echo_icons_03)
-                .setLargeIcon(largeIconBitmap)
-                .setContentTitle(reminder.getTitle())
-                .setContentText(reminder.getDescription())
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            return;
+                    .setSmallIcon(R.drawable.geo_echo_icons_03)
+                    .setLargeIcon(largeIconBitmap)
+                    .setContentTitle(reminder.getTitle())
+                    .setContentText(reminder.getDescription())
+                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            notificationManager.notify(1, builder.build());
+        } else {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
+                    .setSmallIcon(R.drawable.geo_echo_icons_03)
+                    .setLargeIcon(largeIconBitmap)
+                    .setContentTitle(reminder.getTitle())
+                    .setContentText("You have arrived at " + reminder.getLocation().getNickname() + "!" + "\n" + reminder.getDescription())
+                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            notificationManager.notify(1, builder.build());
         }
-        notificationManager.notify(1, builder.build());
-
     }
 
     private void getLastLocation() {
