@@ -5,111 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="365dp"
+        android:layout_height="412dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:text="Geoecho is an innovative location-based reminder app designed to enhance your productivity and streamline your daily tasks. With Geoecho, you can create and manage reminders that are triggered based on your location, ensuring you never forget important tasks when you're in the right place.\n\n
 
-    <Button
-        android:id="@+id/changePasswordButton"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:text="Change password"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/toolbar"
-        android:layout_marginTop="16dp"/>
+ Set reminders that are triggered when you enter or leave specific locations. Whether it's picking up groceries when you're near the store or remembering to call someone when you leave work, Geoecho has you covered.\n\n
 
-    <Button
-        android:id="@+id/changeEmailButton"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:text="Change email"
-        app:layout_constraintTop_toBottomOf="@+id/submitResetEmail"
-        app:layout_constraintStart_toEndOf="@+id/submitResetEmail"
-        android:layout_marginTop="16dp"/>
+Seamlessly sync your reminders across multiple devices so you can stay organized no matter where you are. Whether you're using your smartphone, tablet, or computer, Geoecho keeps your reminders up to date.
 
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/back"
-        android:background="@android:color/transparent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        android:contentDescription="Back Button" />
-
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:hint="Enter your email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@id/changePasswordButton"
-    app:layout_constraintStart_toEndOf="@id/changePasswordButton"
-    app:layout_constraintEnd_toStartOf="@id/changeEmailButton"
-    android:layout_marginTop="16dp"
-    android:visibility="invisible"
-        android:autofillHints="" />
-    <Button
-        android:id="@+id/submitResetEmail"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Submit"
-        app:layout_constraintTop_toBottomOf="@id/emailEditText"
-        app:layout_constraintStart_toEndOf="@id/emailEditText"
-        app:layout_constraintEnd_toStartOf="@id/emailEditText"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        />
-
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:hint="Enter your password"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/changeEmailButton"
-        app:layout_constraintStart_toEndOf="@id/changePasswordButton"
-        app:layout_constraintEnd_toStartOf="@id/changeEmailButton"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-         />
-    <Button
-        android:id="@+id/submitResetPassword"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Submit"
-        app:layout_constraintTop_toBottomOf="@id/newEmailEditText"
-        app:layout_constraintStart_toEndOf="@id/emailEditText"
-        app:layout_constraintEnd_toStartOf="@id/emailEditText"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        />
-    <EditText
-        android:id="@+id/newEmailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:hint="Enter your new email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@id/passwordEditText"
-        app:layout_constraintStart_toStartOf="parent"
+"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.78" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="270dp"
+        android:layout_height="212dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/geo_echo_icons_03" />
+
 
     <androidx.fragment.app.FragmentContainerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fragment_container_view"
+        android:name="com.example.reminderapp.Navbar"
+        style="?android:attr/listViewStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.reminderapp.Navbar" />
+        android:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
