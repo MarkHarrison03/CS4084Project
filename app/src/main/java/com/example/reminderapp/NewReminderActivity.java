@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -13,6 +14,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -99,6 +101,19 @@ public class NewReminderActivity extends AppCompatActivity {
         });
 
         locationCheck.setOnClickListener(view -> {
+            String apiKey = BuildConfig.MAPS_API_KEY;
+
+            if (TextUtils.isEmpty(apiKey)) {
+                Log.e("Places test", "No api key");
+                finish();
+                return;
+            }
+//            if(!com.google.android.libraries.places.api.Places.isInitialized()){
+//                System.out.println("HEYO back up na drunning ");
+//                Places.initializeWithNewPlacesApiEnabled(getApplicationContext(), apiKey) ;
+//                System.out.println("HEYO " + com.google.android.libraries.places.api.Places.isInitialized());
+//            };
+
             if (((CheckBox) view).isChecked()) {
                 isLocation = true;
                 newLocation_dialog dialog_newLocation = new newLocation_dialog();
@@ -106,6 +121,9 @@ public class NewReminderActivity extends AppCompatActivity {
                 endDateButton.setVisibility(View.VISIBLE);
                 endTimeButton.setVisibility(View.VISIBLE);
             } else {
+                finish();
+                startActivity(getIntent());
+
                 isLocation = false;
                 endDateButton.setVisibility(View.GONE);
                 endTimeButton.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
@@ -37,6 +39,17 @@ public class newLocation_dialog {
     private int accuracyRadius = 10;
 
     public void showDialog(Activity activity, FragmentActivity fragmentActivity) {
+        System.out.println("HEYO OPEN" + com.google.android.libraries.places.api.Places.isInitialized());
+        if(!com.google.android.libraries.places.api.Places.isInitialized()){
+
+            String apiKey = BuildConfig.MAPS_API_KEY;
+
+            if (TextUtils.isEmpty(apiKey)) {
+                Log.e("Places test", "No api key");
+                return;
+            }
+
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         LayoutInflater inflater = LayoutInflater.from(activity);
@@ -109,10 +122,16 @@ public class newLocation_dialog {
 
         AlertDialog dialog = builder.create();
         dialog.setOnDismissListener(dialogInterface -> {
+            System.out.println(com.google.android.libraries.places.api.Places.isInitialized());
             if (com.google.android.libraries.places.api.Places.isInitialized()) {
                 com.google.android.libraries.places.api.Places.deinitialize();
+                System.out.println("HEYO CLOSE" + com.google.android.libraries.places.api.Places.isInitialized());
+
+
             }
         });
         dialog.show();
     }
+
+
 }
