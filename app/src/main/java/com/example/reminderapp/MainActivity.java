@@ -76,13 +76,34 @@ public class MainActivity extends AppCompatActivity {
             builder.setNegativeButton("Cancel", null);
             builder.show();
         }
+        boolean hasBackgroundPerms = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+
+        if(!hasBackgroundPerms){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Enable Notifications");
+            builder.setMessage("To receive your location reminders when the app is closed , please enable 'All the time'  for the location settings for this app.");
+            builder.setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                }
+            });
+            builder.setNegativeButton("Cancel", null);
+            builder.show();
+        }
+
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
         String[] permissions = {
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE
 
         };
 
@@ -139,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MainActivity", "Permission granted: " + permissions[i]);
                 } else {
                     Log.d("MainActivity", "Permission denied: " + permissions[i]);
+                   // System.exit(0);
                 }
             }
         }
