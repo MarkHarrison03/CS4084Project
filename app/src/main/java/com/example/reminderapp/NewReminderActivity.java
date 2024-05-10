@@ -216,21 +216,35 @@ public class NewReminderActivity extends AppCompatActivity {
         Reminder newReminder;
         LocalDateTime newReminderTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
+        if(newReminderTime.isBefore(LocalDateTime.now())){
+            Toast.makeText(this, "Date and Time selected is in the past" , Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (locationCheck.isChecked()) {
             Location selectedLocation = Singleton.getInstance().getTempLocation();
             LocalDateTime reminderEndTime = LocalDateTime.of(endYear, endMonth, endDayOfMonth, endHour, endMinute);
-            newReminder = new Reminder(description, label, newReminderTime, selectedLocation, reminderEndTime);
+            if(reminderEndTime.isBefore(newReminderTime)){
+                Toast.makeText(this, "End Date and Time selected is in the past" , Toast.LENGTH_SHORT).show();
+                return;
+            }
+                newReminder = new Reminder(description, label, newReminderTime, selectedLocation, reminderEndTime);
+
         } else {
             newReminder = new Reminder(description, label, newReminderTime);
+        }
+
+        if ( !isLocation  && !isDateSet || !isTimeSet) {
+            Toast.makeText(this, "Please select a date and timel", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (isLocation && (!isEndDateSet || !isEndTimeSet)){
+            Toast.makeText(this, "Please select a date and time", Toast.LENGTH_SHORT).show();
+            return;
         }
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cs4084project-6f69d-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference remindersRef = database.getReference("reminders");
-        Log.d("AUTH", Singleton.getInstance().getUserEmail());
-        System.out.println(Singleton.getInstance().getUserEmail());
-        // Push the new reminder object to the database
         DatabaseReference newReminderRef = remindersRef.push();
         newReminderRef.setValue(newReminder)
                 .addOnSuccessListener(aVoid -> {
@@ -245,11 +259,7 @@ public class NewReminderActivity extends AppCompatActivity {
                     submitButton.setEnabled(true);
                 });
 
-        if ( !isLocation  && isDateSet || !isTimeSet) {
-            Toast.makeText(this, "Please select a date and time", Toast.LENGTH_SHORT).show();
-        } else if (isLocation && !isEndDateSet || !isEndTimeSet){
-            Toast.makeText(this, "Please select a date and time", Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     @Override

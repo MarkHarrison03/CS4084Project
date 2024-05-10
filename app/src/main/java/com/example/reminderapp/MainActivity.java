@@ -1,20 +1,31 @@
 package com.example.reminderapp;
 
+import static java.lang.Thread.sleep;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.libraries.places.api.Places;
@@ -112,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     reminderList.add(Utils.parseDataToReminder(snapshot.toString()));
                 }
+                System.out.println("LIST:" + reminderList);
                 displayReminders(reminderList);
             }
 
@@ -124,11 +136,96 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayReminders(ArrayList<Reminder> reminderList){
+        ArrayList<Reminder> unsentReminders = new ArrayList<>();
+        for(Reminder a : reminderList){
+            if(!a.getIsSent()){
+                unsentReminders.add(a);
+                System.out.println("Reminder being added: " + a);
+            }
+        }
         ListView listView = findViewById(R.id.listView);
-        // Initialize Adapter
-        ArrayAdapter<Reminder> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reminderList);
+        ArrayAdapter<Reminder> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, unsentReminders);
+
         listView.setAdapter(adapter);
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Delete?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                handleLongPress(position);
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // User clicked No button, dismiss the dialog
+                                        dialog.dismiss();
+                                    }
+                                });
+                AlertDialog dialog = builder.create(); // Create and show the dialog
+                dialog.show();
+
+                return true;
+            }
+        });
+
+
     }
+    private void handleLongPress(int pos){
+        System.out.println("LOng press!");
+        System.out.println(pos);
+        ListView listView = findViewById(R.id.listView);
+        ListAdapter adapter = listView.getAdapter();
+        ArrayAdapter<Reminder> reminderAdapter = (ArrayAdapter<Reminder>) adapter;
+        if (adapter != null && adapter instanceof ArrayAdapter<?>){
+            System.out.println( adapter.getItem(pos));
+            Reminder r = reminderAdapter.getItem(pos);
+            Utils.deleteFromDB(r.getID());
+            try {
+                Thread.sleep(1000);
+            }catch (InterruptedException e ){
+                Log.d("error", e.toString());
+            }
+            finish();
+            startActivity(getIntent());
+        }
+        return;
+    };
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("BroadcastReceiver", "Refresh action received");
+
+            if ("refresh".equals(intent.getAction())) {
+                System.out.println("HERE WE ARE. ONCE AGAIN");
+                try {
+                    Thread.sleep(1000);
+                }catch (InterruptedException e ){
+                    Log.d("error", e.toString());
+                }
+                finish();
+                startActivity(getIntent());
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, new IntentFilter("custom_action"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+
+
+
 
 }
 

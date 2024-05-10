@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.squareup.okhttp.internal.Util;
 
 import java.sql.SQLOutput;
 import java.time.LocalDateTime;
@@ -67,6 +68,11 @@ public class NotificationSendingService extends Service {
         scheduleTask();
     }
 
+    private void sendBroadcastToMainActivity() {
+        Intent intent = new Intent("refresh");
+        sendBroadcast(intent);
+    }
+
     private void scheduleTask() {
         handler.postDelayed(new Runnable() {
             @Override
@@ -80,6 +86,8 @@ public class NotificationSendingService extends Service {
                         System.out.println("Activated!");
                         createNotification(reminder);
                         reminder.setIsSent(true);
+                        Utils.deleteFromDB(reminder.getID());
+                        //sendBroadcastToMainActivity();
                     }
                 }
                 handler.postDelayed(this, INTERVAL);
@@ -122,6 +130,7 @@ public class NotificationSendingService extends Service {
             return;
         }
         notificationManager.notify(1, builder.build());
+
     }
 
     private void getLastLocation() {
