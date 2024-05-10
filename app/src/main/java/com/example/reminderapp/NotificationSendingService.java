@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
@@ -48,6 +50,7 @@ public class NotificationSendingService extends Service {
         public void onLocationResult(@NonNull LocationResult locationResult) {
             Location location = locationResult.getLastLocation();
             if (location != null) {
+                System.out.println("LOCATION UPDATE ");
                 Singleton.getInstance().setCurrentLatitude(location.getLatitude());
                 Singleton.getInstance().setCurrentLongitude(location.getLongitude());
             }
@@ -78,9 +81,10 @@ public class NotificationSendingService extends Service {
             @Override
             public void run() {
                 getLastLocation();
+                System.out.println("LOC LAT:" + Singleton.getInstance().getCurrentLatitude());
+                System.out.println("LOC LONG:" + Singleton.getInstance().getCurrentLongitude());
                 ArrayList<Reminder> userReminders = Singleton.getInstance().getUserReminders();
                 for (Reminder reminder : userReminders) {
-                    System.out.println(reminder);
 
                     if (activateReminder(reminder)) {
                         System.out.println("Activated!");
@@ -118,12 +122,15 @@ public class NotificationSendingService extends Service {
 
     private void createNotification(Reminder reminder) {
         createNotificationChannel();
+        Bitmap largeIconBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.icon);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
 
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.geo_echo_icons_03)
+                .setLargeIcon(largeIconBitmap)
                 .setContentTitle(reminder.getTitle())
                 .setContentText(reminder.getDescription())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

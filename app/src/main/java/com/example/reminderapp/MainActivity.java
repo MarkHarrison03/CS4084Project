@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -15,7 +16,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +55,26 @@ public class MainActivity extends AppCompatActivity {
         Intent notificationSending = new Intent(this, NotificationSendingService.class);
         startService(notificationSending);
 
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        boolean areNotificationsEnabled = notificationManager.areNotificationsEnabled();
+        System.out.println("NOTIFS: " + areNotificationsEnabled);
+        if(!areNotificationsEnabled) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Enable Notifications");
+            builder.setMessage("To receive your reminders as notifications, please enable notifications for this app.");
+            builder.setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                }
+            });
+            builder.setNegativeButton("Cancel", null);
+            builder.show();
+        }
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
@@ -59,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         String[] permissions = {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE
+
         };
 
         if (!hasPermissions(permissions)) {
@@ -136,15 +160,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayReminders(ArrayList<Reminder> reminderList){
-        ArrayList<Reminder> unsentReminders = new ArrayList<>();
-        for(Reminder a : reminderList){
-            if(!a.getIsSent()){
-                unsentReminders.add(a);
-                System.out.println("Reminder being added: " + a);
-            }
-        }
+//        ArrayList<Reminder> unsentReminders = new ArrayList<>();
+//        for(Reminder a : reminderList){
+//            if(!a.getIsSent()){
+//                unsentReminders.add(a);
+//                System.out.println("Reminder being added: " + a);
+//            }
+//        }
         ListView listView = findViewById(R.id.listView);
-        ArrayAdapter<Reminder> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, unsentReminders);
+        ArrayAdapter<Reminder> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reminderList);
 
         listView.setAdapter(adapter);
 

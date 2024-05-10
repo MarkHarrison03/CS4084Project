@@ -11,11 +11,11 @@
         android:layout_height="412dp"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
-        android:text="Geoecho is an innovative location-based reminder app designed to enhance your productivity and streamline your daily tasks. With Geoecho, you can create and manage reminders that are triggered based on your location, ensuring you never forget important tasks when you're in the right place.\n\n
+        android:text="GeoEcho is an innovative location-based reminder app designed to enhance your productivity and streamline your daily tasks. With GeoEcho, you can create and manage reminders that are triggered based on your location, ensuring you never forget important tasks when you're in the right place.\n\n
 
- Set reminders that are triggered when you enter or leave specific locations. Whether it's picking up groceries when you're near the store or remembering to call someone when you leave work, Geoecho has you covered.\n\n
+ Set reminders that are triggered when you enter or leave specific locations. Whether it's picking up groceries when you're near the store or remembering to call someone when you leave work, GeoEcho has you covered.\n\n
 
-Seamlessly sync your reminders across multiple devices so you can stay organized no matter where you are. Whether you're using your smartphone, tablet, or computer, Geoecho keeps your reminders up to date.
+Seamlessly sync your reminders across multiple devices so you can stay organized no matter where you are. Whether you're using your smartphone, tablet, or computer, GeoEcho keeps your reminders up to date.
 
 "
         android:textAlignment="center"
@@ -44,10 +44,10 @@ Seamlessly sync your reminders across multiple devices so you can stay organized
     <Button
         android:id="@+id/buttonRegister"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="169dp"
-        android:layout_height="65dp"
+        android:layout_width="175dp"
+        android:layout_height="51dp"
         android:layout_marginStart="124dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="84dp"
         android:text="Sign Out"
         android:textColor="@color/white"
         app:backgroundTint="@color/cardview_dark_background"

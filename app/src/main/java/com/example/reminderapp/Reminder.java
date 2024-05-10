@@ -122,7 +122,7 @@ public class Reminder {
         if(endDate == null){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedDateTime = dateInput.format(formatter);
-        String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + formattedDateTime + "\n" + "ID: " + id + "\n" + "\n Is Sent? " + isSent + "\n";
+        String s = "Title: " + title + "\n" + "Description: " + description + "\n" + "Email:" + email + "\n" + "Date and Time: " + formattedDateTime + "\n" + "ID: " + id + "\n" ;
         return s;
         }else{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

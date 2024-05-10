@@ -205,8 +205,8 @@ public class NewReminderActivity extends AppCompatActivity {
 
         DatePickerDialog.OnDateSetListener onDateSetListener = (datePicker, selectedYear, selectedMonth, selectedDayOfMonth) -> {
             endYear = selectedYear;
-            endMonth = selectedMonth + 1;
-            endDayOfMonth = selectedDayOfMonth;
+            endMonth = selectedMonth + 1 ;
+            endDayOfMonth = selectedDayOfMonth ;
 
             Button dateButton = findViewById(R.id.EndDateButton);
             dateButton.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", endDayOfMonth, endMonth, endYear));
@@ -216,7 +216,7 @@ public class NewReminderActivity extends AppCompatActivity {
             }
         };
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(NewReminderActivity.this, onDateSetListener, year, month, dayOfMonth);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(NewReminderActivity.this, onDateSetListener, year, month - 1, dayOfMonth);
         datePickerDialog.show();
     }
 
